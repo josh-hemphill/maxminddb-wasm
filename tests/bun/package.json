@@ -1,0 +1,14 @@
+{
+	"name": "@maxminddb-wasm/bun",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"test:bun": "env CI=TRUE bun test ./test.ts"
+	},
+	"dependencies": {
+		"maxminddb-wasm": "workspace:*"
+	},
+	"optionalDependencies": {
+		"bun": "1.2.2"
+	}
+}

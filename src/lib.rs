@@ -1,0 +1,233 @@
+mod utils;
+
+use maxminddb::geoip2;
+use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
+#[cfg(feature = "talc")]
+use talc::*;
+use tsify_next::Tsify;
+use wasm_bindgen::prelude::*; // Rename to avoid confusion
+
+// When the `talc_alloc` feature is enabled, use `talc_alloc` as the global
+// allocator.
+#[cfg(feature = "talc")]
+static mut ARENA: [u8; 10000] = [0; 10000];
+
+#[cfg(feature = "talc")]
+#[global_allocator]
+static ALLOCATOR: talc::Talck<spin::Mutex<()>, ClaimOnOom> = talc::Talc::new(unsafe {
+    // if we're in a hosted environment, the Rust runtime may allocate before
+    // main() is called, so we need to initialize the arena automatically
+    ClaimOnOom::new(Span::from_array(core::ptr::addr_of!(ARENA).cast_mut()))
+})
+.lock();
+
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct Metadata {
+    pub binary_format_major_version: u16,
+    pub binary_format_minor_version: u16,
+    pub build_epoch: u64,
+    pub database_type: String,
+    pub description: BTreeMap<String, String>,
+    pub ip_version: u16,
+    pub languages: Vec<String>,
+    pub node_count: u32,
+    pub record_size: u16,
+}
+impl Metadata {
+    pub fn new(db: &maxminddb::Reader<Vec<u8>>) -> Metadata {
+        let metadata = &db.metadata;
+        Metadata {
+            binary_format_major_version: metadata.binary_format_major_version.clone(),
+            binary_format_minor_version: metadata.binary_format_minor_version.clone(),
+            build_epoch: metadata.build_epoch.clone(),
+            database_type: metadata.database_type.clone(),
+            description: metadata.description.clone(),
+            ip_version: metadata.ip_version.clone(),
+            languages: metadata.languages.clone(),
+            node_count: metadata.node_count.clone(),
+            record_size: metadata.record_size.clone(),
+        }
+    }
+}
+
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct CityResponse {
+    #[tsify(optional)]
+    pub city: Option<CityRecord>,
+    #[tsify(optional)]
+    pub continent: Option<ContinentRecord>,
+    #[tsify(optional)]
+    pub country: Option<CountryRecord>,
+    #[tsify(optional)]
+    pub location: Option<LocationRecord>,
+    // Add other fields you need
+}
+
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct CityRecord {
+    #[tsify(optional)]
+    pub geoname_id: Option<u32>,
+    #[tsify(optional)]
+    pub names: Option<BTreeMap<String, String>>,
+}
+
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct ContinentRecord {
+    #[tsify(optional)]
+    pub code: Option<String>,
+    #[tsify(optional)]
+    pub geoname_id: Option<u32>,
+    #[tsify(optional)]
+    pub names: Option<BTreeMap<String, String>>,
+}
+
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct CountryRecord {
+    #[tsify(optional)]
+    pub geoname_id: Option<u32>,
+    #[tsify(optional)]
+    pub iso_code: Option<String>,
+    #[tsify(optional)]
+    pub names: Option<BTreeMap<String, String>>,
+}
+
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct LocationRecord {
+    #[tsify(optional)]
+    pub latitude: Option<f64>,
+    #[tsify(optional)]
+    pub longitude: Option<f64>,
+    #[tsify(optional)]
+    pub time_zone: Option<String>,
+}
+
+#[wasm_bindgen]
+pub struct Maxmind {
+    db: maxminddb::Reader<Vec<u8>>,
+}
+
+fn convert_city_response(city_record: geoip2::City) -> CityResponse {
+    CityResponse {
+        city: city_record.city.map(|city| CityRecord {
+            geoname_id: city.geoname_id,
+            names: city.names.map(|n| {
+                n.into_iter()
+                    .map(|(k, v)| (k.to_string(), v.to_string()))
+                    .collect()
+            }),
+        }),
+        continent: city_record.continent.map(|cont| ContinentRecord {
+            code: cont.code.map(|s| s.to_string()),
+            geoname_id: cont.geoname_id,
+            names: cont.names.map(|n| {
+                n.into_iter()
+                    .map(|(k, v)| (k.to_string(), v.to_string()))
+                    .collect()
+            }),
+        }),
+        country: city_record.country.map(|country| CountryRecord {
+            geoname_id: country.geoname_id,
+            iso_code: country.iso_code.map(|s| s.to_string()),
+            names: country.names.map(|n| {
+                n.into_iter()
+                    .map(|(k, v)| (k.to_string(), v.to_string()))
+                    .collect()
+            }),
+        }),
+        location: city_record.location.map(|loc| LocationRecord {
+            latitude: loc.latitude,
+            longitude: loc.longitude,
+            time_zone: loc.time_zone.map(|s| s.to_string()),
+        }),
+    }
+}
+
+#[derive(Serialize, Deserialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
+pub struct Ipv4Network {
+    pub ip: Ipv4Addr,
+    pub prefix: u8,
+}
+
+#[derive(Serialize, Deserialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
+pub struct Ipv6Network {
+    pub ip: Ipv6Addr,
+    pub prefix: u8,
+}
+
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct PrefixResponse {
+    pub city: CityResponse,
+    pub prefix_length: usize,
+}
+
+#[derive(Serialize, Deserialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
+pub enum IpNetwork {
+    V4(Ipv4Network),
+    V6(Ipv6Network),
+}
+
+#[derive(Serialize, Deserialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct IpAddrResponse {
+    pub address: String,
+}
+
+#[wasm_bindgen]
+impl Maxmind {
+    #[wasm_bindgen(constructor)]
+    pub fn new(js_db: Box<[u8]>) -> Maxmind {
+        let local_arr: Vec<u8> = js_db.into_vec();
+        Maxmind {
+            db: maxminddb::Reader::from_source(local_arr).expect_throw("Invalid Database Binary"),
+        }
+    }
+
+    pub fn lookup_city(&self, ip_str: &str) -> Result<CityResponse, JsError> {
+        let ip_addr_str: IpAddr = ip_str.parse::<IpAddr>().expect_throw("Invalid IP");
+        let result: geoip2::City = self.db.lookup(ip_addr_str).expect_throw("Result Not Found");
+
+        // Convert the geoip2::City to our CityResponse
+        let response = convert_city_response(result);
+
+        Ok(response)
+    }
+
+    pub fn lookup_prefix(&self, ip_str: &str) -> Result<PrefixResponse, JsError> {
+        let ip_addr_str: IpAddr = ip_str.parse::<IpAddr>().expect_throw("Invalid IP");
+        let result: (geoip2::City, usize) = self
+            .db
+            .lookup_prefix(ip_addr_str)
+            .expect_throw("Result Not Found");
+
+        let response = convert_city_response(result.0);
+
+        Ok(PrefixResponse {
+            city: response,
+            prefix_length: result.1,
+        })
+    }
+
+    #[wasm_bindgen(getter = metadata)]
+    pub fn get_metadata(&self) -> Result<Metadata, JsError> {
+        let metadata = Metadata::new(&self.db);
+        Ok(metadata)
+    }
+}
+
+#[wasm_bindgen(start)]
+pub fn run() -> Result<(), JsValue> {
+    utils::set_panic_hook();
+    Ok(())
+}

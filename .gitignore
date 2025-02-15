@@ -1,7 +1,9 @@
-wasm-deno-maxminddb/target
 **/*.rs.bk
-test/*.mmdb
-wasm-deno-maxminddb/Cargo.lock
-wasm-deno-maxminddb/bin/
-wasm-deno-maxminddb/pkg/
-wasm-deno-maxminddb/wasm-pack.log
+tests/*.mmdb
+node_modules/
+/node/
+/browser/
+/node-module/
+/bundler/
+/pnpm-lock.yaml
+/target/

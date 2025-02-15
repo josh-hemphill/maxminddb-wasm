@@ -1,8 +1,24 @@
 {
-	"deno.enable": true,
-	"deno.lint": true,
-	"deno.unstable": true,
-	"deno.codeLens.referencesAllFunctions": true,
-	"deno.codeLens.implementations": true,
-	"deno.codeLens.references": true
+	"cSpell.words": [
+		"bitjson",
+		"bitauth",
+		"cimg",
+		"circleci",
+		"codecov",
+		"commitlint",
+		"dependabot",
+		"editorconfig",
+		"esnext",
+		"execa",
+		"exponentiate",
+		"globby",
+		"libauth",
+		"mkdir",
+		"prettierignore",
+		"sandboxed",
+		"transpiled",
+		"typedoc",
+		"untracked",
+		"subslate"
+	],
 }

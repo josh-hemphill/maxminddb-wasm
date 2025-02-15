@@ -1,16 +1,30 @@
 {
-	"name": "maxminddb-deno",
-	"version": "0.0.0",
+	"name": "maxminddb-wasm",
+	"version": "2.0.0",
 	"publishConfig": {
 		"access": "public"
 	},
+	"main": "./bundler/index.js",
+	"types": "./bundler/index.d.ts",
 	"scripts": {
-		"semantic-release": "semantic-release"
+		"semantic-release": "semantic-release",
+		"build": "tsx cli.ts --build-rs && pnpm run \"/^build:.*/\"",
+		"build:node": "tsx cli.ts --build-js --target nodejs",
+		"build:browser": "tsx cli.ts --build-js --target web",
+		"build:bundler": "tsx cli.ts --build-js --target bundler",
+		"build:node-module": "tsx cli.ts --build-js --target experimental-nodejs-module",
+		"test": "pnpm run build && tsx cli.ts --fetch-test-artifacts && pnpm run -r \"/^test:.*/\"",
+		"pub-dry": "pnpm run build && pnpm run \"/^pub:.*/\" --dry-run",
+		"pub": "pnpm run build && pnpm run \"/^pub:.*/\"",
+		"pub:jsr": "pnpm dlx jsr publish",
+		"pub:npm": "npm publish",
+		"postinstall": "tsx cli.ts --install-bindgen"
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/josh-hemphill/maxminddb-deno.git"
 	},
+	"type": "module",
 	"contributors": [
 		{
 			"name": "JoshuaHemphill",
@@ -24,10 +38,37 @@
 	},
 	"homepage": "https://github.com/josh-hemphill/maxminddb-deno",
 	"devDependencies": {
-		"semantic-release": "^17",
+		"@types/node": "22.13.4",
+		"@types/fs-extra": "11.0.4",
+		"@semantic-release/changelog": "^6",
+		"@semantic-release/git": "^10",
+		"acorn": "8.14.0",
+		"ast-types": "0.15.1",
+		"recast": "0.23.9",
+		"semantic-release": "^24",
 		"semantic-release-gitmoji": "^1",
-		"@semantic-release/changelog": "^5",
-		"@semantic-release/git": "^9",
-		"semantic-release-license": "^1"
-	}
+		"semantic-release-license": "^1",
+		"tsx": "^4.19.2",
+		"wasm-pack": "0.13.1",
+		"zx": "8.3.2"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"bun",
+			"deno",
+			"esbuild",
+			"msw",
+			"sharp",
+			"wasm-pack",
+			"workerd"
+		]
+	},
+	"files": [
+		"node",
+		"browser",
+		"bundler",
+		"node-module",
+		"LICENSE",
+		"README.md"
+	]
 }

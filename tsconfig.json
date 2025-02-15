@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		// Modern ESM output
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"target": "ESNext",
+		// Strict type checking
+		"strict": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		// Output configuration
+		"declaration": false,
+		"outDir": "./dist",
+		// Source map support for debugging
+		"sourceMap": true,
+		// Additional safety checks
+		"forceConsistentCasingInFileNames": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"types": [
+			"node",
+		]
+	},
+	"exclude": [
+		"node_modules",
+		"dist",
+		"tests/*/**"
+	]
+}

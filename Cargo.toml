@@ -1,0 +1,46 @@
+[package]
+name = "index"
+version = "2.0.0"
+authors = ["josh-hemphill <dev@joshuahemphill.com>"]
+edition = "2021"
+description = "A library that enables the usage of MaxmindDB geoIP databases by using the Rust library in a WebAssembly module"
+license = "MIT"
+repository = "https://github.com/josh-hemphill/maxminddb-deno"
+homepage = "https://github.com/josh-hemphill/maxminddb-deno"
+keywords = ["maxminddb", "geoip", "deno", "node", "browser", "wasm"]
+categories = ["science", "data"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["console_error_panic_hook"]
+
+[dependencies]
+maxminddb = "0.24"
+js-sys = "0.3"
+cfg-if = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
+serde-wasm-bindgen = "0.6.3"
+tsify-next = "0.5.5"
+
+# The `console_error_panic_hook` crate provides better debugging of panics by
+# logging them with `console.error`. This is great for development, but requires
+# all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
+# code size when deploying.
+console_error_panic_hook = { version = "0.1", optional = true }
+
+# `wee_alloc` is now deprecated, so we use talc, which seems to be the best
+# alternative. `talc` also requires nightly Rust.
+talc = { version = "4.4.2", optional = true }
+spin = { version = "0.9.8", optional = true }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+
+[profile.release]
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"

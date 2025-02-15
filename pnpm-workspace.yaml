@@ -1,0 +1,7 @@
+packages:
+  - "tests/cloudflare"
+  - "tests/deno"
+  - "tests/node"
+  - "tests/bun"
+  - "tests/browser"
+  - "tests/node-module"

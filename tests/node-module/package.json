@@ -1,0 +1,17 @@
+{
+	"name": "@maxminddb-wasm/node-module",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test:node-module": "vitest run"
+	},
+	"dependencies": {
+		"maxminddb-wasm": "workspace:*"
+	},
+	"devDependencies": {
+		"tsx": "4.19.2",
+		"typescript": "5.7.3",
+		"vitest": "3.0.5"
+	}
+}

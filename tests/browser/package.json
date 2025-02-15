@@ -1,0 +1,20 @@
+{
+	"name": "@maxminddb-wasm/browser",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"failing:test:browser": "vitest run",
+		"postinstall": "playwright install chromium --with-deps"
+	},
+	"dependencies": {
+		"maxminddb-wasm": "workspace:*"
+	},
+	"devDependencies": {
+		"vitest": "3.0.5"
+	},
+	"optionalDependencies": {
+		"@vitest/browser": "3.0.5",
+		"playwright": "1.46.1"
+	}
+}

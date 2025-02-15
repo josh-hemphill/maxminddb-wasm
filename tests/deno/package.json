@@ -1,0 +1,14 @@
+{
+	"name": "deno",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"test:deno": "env CI=TRUE deno test -A ./test.ts"
+	},
+	"dependencies": {
+		"maxminddb-wasm": "workspace:*"
+	},
+	"optionalDependencies": {
+		"deno": "2.1.10"
+	}
+}

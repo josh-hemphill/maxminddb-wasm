@@ -1,0 +1,12 @@
+{
+	"name": "@josh-hemphill/maxminddb-wasm",
+	"exports": "./bundler/index.js",
+	"publish": {
+		"include": [
+			"bundler"
+		],
+		"exclude": [
+			"!bundler"
+		]
+	}
+}
