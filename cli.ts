@@ -1,5 +1,22 @@
 import 'zx/globals';
 
+const detectCiEnvs = () => {
+	const ciEnvs = [
+		'CI',
+		'GITHUB_ACTIONS',
+		'GITHUB_RUN_ID',
+		'GITHUB_RUN_NUMBER',
+		'GITHUB_RUN_ATTEMPT',
+		'GITHUB_RUN_ID',
+	];
+	for (const env of ciEnvs) {
+		if (process.env[env]) {
+			return true;
+		}
+	}
+	return false;
+};
+
 const cliArgs = minimist(process.argv.slice(2), {
 	string: [
 		'target',
@@ -28,17 +45,14 @@ const cliArgs = minimist(process.argv.slice(2), {
 });
 
 if (cliArgs['install-bindgen']) {
-	const isWindows = process.platform === 'win32';
-	if (isWindows) {
-		$({ quiet: true })`where wasm-bindgen || cargo install -f wasm-bindgen-cli`;
-	} else {
-		$({ quiet: true })`command -v wasm-bindgen || cargo install -f wasm-bindgen-cli`;
+	const binPath = which('wasm-bindgen');
+	if (!binPath && !detectCiEnvs()) {
+		$`cargo install -f wasm-bindgen-cli`;
 	}
 }
 
 const profile = cliArgs.profile || 'release';
 
-const packageName = fs.readFileSync('cargo.toml', 'utf8').match(/name = "(.*)"/)?.[1] || 'wasm_maxminddb';
 if (cliArgs['build-rs']) {
 	$`cargo build --lib --${profile} --target wasm32-unknown-unknown`;
 }
@@ -54,7 +68,7 @@ if (cliArgs['build-js']) {
 	}[target] || 'node';
 	fs.removeSync(`./${targetToDir}`);
 	await $`wasm-bindgen \
-	--target ${target} ./target/wasm32-unknown-unknown/${profile}/${packageName}.wasm \
+	--target ${target} ./target/wasm32-unknown-unknown/${profile}/index.wasm \
 	--out-dir ./${targetToDir}`;
 }
 

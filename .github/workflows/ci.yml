@@ -54,6 +54,10 @@ jobs:
       - name: Setup Rust
         run: rustup toolchain install stable --target wasm32-unknown-unknown
 
+      - uses: jetli/wasm-bindgen-action@v0.2.0
+        with:
+          version: 'latest'
+
       - name: Setup and cache dependencies
         uses: ./.github/actions/setup-and-cache
 
@@ -88,35 +92,7 @@ jobs:
         run: pnpm test-ci
 
       - name: Generate test badges
-        run: >
-          node -e "
-            const fs = require('zx/globals');
-            const testSummary = fs.readJsonSync('./pnpm-exec-summary.json');
-            const degraded = [];
-            let comment = '### Test Results\n\n';
-            comment += '| Test Suite | Status |\n';
-            comment += '|------------|---------|\n';
-            Object.entries(testSummary.executionStatus).map(([name, status]) => ({
-              label: name.split(path.sep).pop(),
-              message: status.status,
-              color: status.status === 'passed' ? 'green' : 'red'
-            })).forEach((spec) => {
-              const svg = badge(spec);
-              const statPath = `.github/badges/test-stats-${spec.label}.json`;
-              const oldStat = fs.readJsonSync(statPath, { throws: false });
-              if (oldStat.message === 'passed' && spec.message !== 'passed') {
-                degraded.push(spec.label);
-              }
-              fs.ensureFileSync(statPath, JSON.stringify(testSummary, null, 2));
-              fs.ensureFileSync(`.github/badges/test-${spec.label}.svg`, svg);
-              const statusEmoji = status.status === 'passed' ? '✅' : '❌';
-              comment += `| ${suite} | ${statusEmoji} ${status.status} |\n`;
-            });
-            if (degraded.length > 0) {
-              throw new Error(`The following tests have degraded: ${degraded.join(', ')}`);
-            }
-            fs.writeFileSync('test-results.txt', comment);
-          "
+        run: pnpm exec tsx scripts/make-badges.ts
 
       - name: Post Test Results Comment
         if: github.event_name == 'pull_request'
@@ -140,4 +116,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "📝 docs: update test badges [skip ci]"
-          file_pattern: "*.svg" 
+          file_pattern: '*.svg .github/badges/*.json' 

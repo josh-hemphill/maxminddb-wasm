@@ -5,6 +5,5 @@ node_modules/
 /browser/
 /node-module/
 /bundler/
-/pnpm-lock.yaml
 /target/
 pnpm-exec-summary.json
