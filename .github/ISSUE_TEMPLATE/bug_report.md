@@ -8,14 +8,14 @@ assignees: 'josh-hemphill'
 
 <!--
 
-Have you read maxmind-deno's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/josh-hemphill/maxmind-deno/.github/CODE_OF_CONDUCT.md
+Have you read maxminddb-wasm's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/josh-hemphill/maxminddb-wasm/.github/CODE_OF_CONDUCT.md
 
 -->
 
 ### Prerequisites
 
-  * [ ] Reproduced the problem in a sandbox or repo: <https://codepen.io>
-  * [ ] Checked that your issue isn't already filed: <https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/maxmind-deno>
+  * [ ] Reproduced the problem in a sandbox or repo
+  * [ ] Checked that your issue isn't already filed: <https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/maxminddb-wasm>
 
 ### Description
 

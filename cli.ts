@@ -30,9 +30,9 @@ const cliArgs = minimist(process.argv.slice(2), {
 if (cliArgs['install-bindgen']) {
 	const isWindows = process.platform === 'win32';
 	if (isWindows) {
-		$`where wasm-bindgen >nul 2>nul || cargo install -f wasm-bindgen-cli`;
+		$({ quiet: true })`where wasm-bindgen || cargo install -f wasm-bindgen-cli`;
 	} else {
-		$`command -v wasm-bindgen >/dev/null 2>&1 || cargo install -f wasm-bindgen-cli`;
+		$({ quiet: true })`command -v wasm-bindgen || cargo install -f wasm-bindgen-cli`;
 	}
 }
 

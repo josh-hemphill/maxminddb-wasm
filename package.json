@@ -13,16 +13,15 @@
 		"build:browser": "tsx cli.ts --build-js --target web",
 		"build:bundler": "tsx cli.ts --build-js --target bundler",
 		"build:node-module": "tsx cli.ts --build-js --target experimental-nodejs-module",
-		"test": "pnpm run build && tsx cli.ts --fetch-test-artifacts && pnpm run -r \"/^test:.*/\"",
-		"pub-dry": "pnpm run build && pnpm run \"/^pub:.*/\" --dry-run",
-		"pub": "pnpm run build && pnpm run \"/^pub:.*/\"",
-		"pub:jsr": "pnpm dlx jsr publish",
-		"pub:npm": "npm publish",
+		"test": "tsx cli.ts --fetch-test-artifacts && pnpm run \"/^test:.*/\"",
+		"test-ci": "tsx cli.ts --fetch-test-artifacts && pnpm run --aggregate-output -r --no-bail --report-summary \"/test:.*/\"",
+		"release": "tsx scripts/release.ts",
+		"publish-ci": "tsx scripts/publish-ci.ts",
 		"postinstall": "tsx cli.ts --install-bindgen"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/josh-hemphill/maxminddb-deno.git"
+		"url": "https://github.com/josh-hemphill/maxminddb-wasm.git"
 	},
 	"type": "module",
 	"contributors": [
@@ -34,16 +33,16 @@
 	],
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/josh-hemphill/maxminddb-deno/issues"
+		"url": "https://github.com/josh-hemphill/maxminddb-wasm/issues"
 	},
-	"homepage": "https://github.com/josh-hemphill/maxminddb-deno",
+	"homepage": "https://github.com/josh-hemphill/maxminddb-wasm",
 	"devDependencies": {
 		"@types/node": "22.13.4",
 		"@types/fs-extra": "11.0.4",
-		"@semantic-release/changelog": "^6",
-		"@semantic-release/git": "^10",
 		"acorn": "8.14.0",
-		"ast-types": "0.15.1",
+		"ast-types": "0.16.1",
+		"badge-maker": "4.1.0",
+		"bumpp": "10.0.3",
 		"recast": "0.23.9",
 		"semantic-release": "^24",
 		"semantic-release-gitmoji": "^1",

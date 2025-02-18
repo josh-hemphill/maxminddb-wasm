@@ -5,8 +5,8 @@ authors = ["josh-hemphill <dev@joshuahemphill.com>"]
 edition = "2021"
 description = "A library that enables the usage of MaxmindDB geoIP databases by using the Rust library in a WebAssembly module"
 license = "MIT"
-repository = "https://github.com/josh-hemphill/maxminddb-deno"
-homepage = "https://github.com/josh-hemphill/maxminddb-deno"
+repository = "https://github.com/josh-hemphill/maxminddb-wasm"
+homepage = "https://github.com/josh-hemphill/maxminddb-wasm"
 keywords = ["maxminddb", "geoip", "deno", "node", "browser", "wasm"]
 categories = ["science", "data"]
 
@@ -19,7 +19,7 @@ crate-type = ["cdylib", "rlib"]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-maxminddb = "0.24"
+maxminddb = "0.25.0"
 js-sys = "0.3"
 cfg-if = "1.0"
 serde = { version = "1.0", features = ["derive"] }

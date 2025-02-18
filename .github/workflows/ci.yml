@@ -1,0 +1,144 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - dev
+      - dev-next
+      - next
+      - beta
+      - alpha
+      - "*.x"
+    paths:
+      - "**.ts"
+      - ".github/workflows/**.yml"
+      - ".github/actions/**.yml"
+      - "src/**"
+      - "test/**"
+      - "*.json"
+  pull_request:
+    paths:
+      - "**.ts"
+      - ".github/workflows/**.yml"
+      - ".github/actions/**.yml"
+      - "src/**"
+      - "test/**"
+      - "*.json"
+    types:
+      - opened
+      - synchronize
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      release:
+        type: boolean
+        default: false
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+
+      - name: Setup and cache dependencies
+        uses: ./.github/actions/setup-and-cache
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --no-optional
+
+      - name: Build
+        run: pnpm build
+
+      - name: Upload build artifacts
+        if: inputs.release == true
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: |
+            browser/
+            bundler/
+            node/
+            node-module/
+            package.json
+            README.md
+            LICENSE
+            jsr.json
+          retention-days: 1
+
+      - uses: browser-actions/setup-chrome@v1
+      - name: Install test dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test
+        continue-on-error: true
+        run: pnpm test-ci
+
+      - name: Generate test badges
+        run: >
+          node -e "
+            const fs = require('zx/globals');
+            const testSummary = fs.readJsonSync('./pnpm-exec-summary.json');
+            const degraded = [];
+            let comment = '### Test Results\n\n';
+            comment += '| Test Suite | Status |\n';
+            comment += '|------------|---------|\n';
+            Object.entries(testSummary.executionStatus).map(([name, status]) => ({
+              label: name.split(path.sep).pop(),
+              message: status.status,
+              color: status.status === 'passed' ? 'green' : 'red'
+            })).forEach((spec) => {
+              const svg = badge(spec);
+              const statPath = `.github/badges/test-stats-${spec.label}.json`;
+              const oldStat = fs.readJsonSync(statPath, { throws: false });
+              if (oldStat.message === 'passed' && spec.message !== 'passed') {
+                degraded.push(spec.label);
+              }
+              fs.ensureFileSync(statPath, JSON.stringify(testSummary, null, 2));
+              fs.ensureFileSync(`.github/badges/test-${spec.label}.svg`, svg);
+              const statusEmoji = status.status === 'passed' ? '✅' : '❌';
+              comment += `| ${suite} | ${statusEmoji} ${status.status} |\n`;
+            });
+            if (degraded.length > 0) {
+              throw new Error(`The following tests have degraded: ${degraded.join(', ')}`);
+            }
+            fs.writeFileSync('test-results.txt', comment);
+          "
+
+      - name: Post Test Results Comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const comment = fs.readFileSync('test-results.txt', 'utf8');
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: comment
+            });
+
+      - name: Commit test badges
+        if: github.event.pull_request.number == null || inputs.release == false
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "📝 docs: update test badges [skip ci]"
+          file_pattern: "*.svg" 

@@ -7,3 +7,4 @@ node_modules/
 /bundler/
 /pnpm-lock.yaml
 /target/
+pnpm-exec-summary.json

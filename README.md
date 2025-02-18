@@ -5,9 +5,9 @@
   <strong>A library that enables the usage of MaxmindDB geoIP databases by using the Rust library in a WebAssembly module</strong>
 
   <p>
-    <a href="https://github.com/josh-hemphill/maxminddb-deno/releases"><img src="https://img.shields.io/github/v/tag/josh-hemphill/subslate?sort=semver&style=flat-square" alt="version" /></a>
-    <a href="https://github.com/josh-hemphill/maxminddb-deno/actions/workflows/test.yml"><img src="https://img.shields.io/github/workflow/status/josh-hemphill/maxminddb-deno/Test?label=Tests&style=flat-square" alt="Test Status" /></a>
-    <a href="https://github.com/josh-hemphill/maxminddb-deno/actions/workflows/build.yml"><img src="https://img.shields.io/github/workflow/status/josh-hemphill/maxminddb-deno/Build?label=Build&style=flat-square" alt="Build Status" /></a>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/releases"><img src="https://img.shields.io/github/v/tag/josh-hemphill/subslate?sort=semver&style=flat-square" alt="version" /></a>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/test.yml"><img src="https://img.shields.io/github/workflow/status/josh-hemphill/maxminddb-wasm/Test?label=Tests&style=flat-square" alt="Test Status" /></a>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/build.yml"><img src="https://img.shields.io/github/workflow/status/josh-hemphill/maxminddb-wasm/Build?label=Build&style=flat-square" alt="Build Status" /></a>
     <a href="https://deno.land/x/maxminddb/mod.ts"><img src="https://img.shields.io/static/v1?label=&message=Deno&logo=deno&color=informational&style=flat-square" alt="Deno Page" /></a>
     <a href="https://doc.deno.land/https/deno.land/x/maxminddb/mod.ts"><img src="https://img.shields.io/static/v1?label=&message=API-Doc&color=informational&style=flat-square&logo=deno" alt="API doc" /></a>
   </p>
@@ -15,34 +15,209 @@
 
 ## About
 
-Uses the [Rust MaxmindDB library](https://crates.io/crates/maxminddb) to create a WASM binary to let you pass in the database yourself in `js/ts` and make it queryable.
+Uses the [Rust MaxmindDB library](https://crates.io/crates/maxminddb) to create a WASM binary that lets you query MaxMind databases directly in JavaScript/TypeScript.
 
-## 🚴 Usage
+### Status
+
+  - [x] Node.js
+  - [x] Deno
+  - [x] Bun
+  - [/] Browser (tests are flaky, so not certain)
+  - [?] Cloudflare Workers (have not been able to get them to work locally, you can see the tests [here](https://github.com/josh-hemphill/maxminddb-wasm/blob/main/.github/workflows/test.yml))
+
+## Installation
+
+### Node.js / Browser (npm)
+
+```bash
+npm install maxminddb-wasm
+# or
+pnpm add maxminddb-wasm
+```
+
+### Deno ([jsr](https://jsr.io/docs/introduction))
+
+```ts
+import { Maxmind } from "jsr:@josh-hemphill/maxminddb-wasm/bundler";
+```
+
+## Usage Examples
+
+### Node.js
+
+```ts
+import { readFile } from 'node:fs/promises';
+import { Maxmind } from 'maxminddb-wasm/node-module';
+
+const dbFile = await readFile('./GeoLite2-City.mmdb');
+const maxmind = new Maxmind(dbFile);
+const result = maxmind.lookup_city('8.8.8.8');
+console.log(result);
+```
 
 ### Deno
 
 ```ts
-import { Maxmind } from "./mod.ts";
-const dbRawFile = await Deno.readFile('./GeoLite2-City.mmdb')
-const db = new Maxmind(dbRawFile)
-const result = db.lookup_city('8.8.8.8')
+import { Maxmind } from "jsr:@josh-hemphill/maxminddb-wasm/bundler";
 
+const dbFile = await Deno.readFile('./GeoLite2-City.mmdb');
+const maxmind = new Maxmind(dbFile);
+const result = maxmind.lookup_city('8.8.8.8');
+console.log(result);
+```
+
+### Browser
+
+```ts
+import { Maxmind } from 'maxminddb-wasm/browser';
+
+// Fetch the database file
+const response = await fetch('/GeoLite2-City.mmdb');
+const dbFile = new Uint8Array(await response.arrayBuffer());
+const maxmind = new Maxmind(dbFile);
+const result = maxmind.lookup_city('8.8.8.8');
+```
+
+### Cloudflare Workers
+
+```ts
+import { Maxmind } from 'maxminddb-wasm/browser';
+
+export default {
+  async fetch(request, env) {
+    const maxmind = new Maxmind(new Uint8Array(env.MAXMIND_DB));
+    const ip = request.headers.get('cf-connecting-ip');
+    const result = maxmind.lookup_city(ip);
+    return new Response(JSON.stringify(result));
+  }
+};
+```
+
+### Bun
+
+```ts
+import { Maxmind } from 'maxminddb-wasm/node-module';
+
+const dbFile = await Bun.file('./GeoLite2-City.mmdb').arrayBuffer();
+const maxmind = new Maxmind(new Uint8Array(dbFile));
+const result = maxmind.lookup_city('8.8.8.8');
+```
+
+## API Reference
+
+### `Maxmind` Class
+
+#### Constructor
+
+```ts
+new Maxmind(dbFile: Uint8Array)
+```
+
+Creates a new Maxmind instance with the provided database file.
+
+#### Methods
+
+##### `lookup_city(ip: string): CityResponse`
+
+Looks up city information for the given IP address.
+
+##### `lookup_prefix(ip: string): PrefixResponse`
+
+Looks up network prefix information for the given IP address.
+
+##### `metadata: Metadata`
+
+Read-only property that returns database metadata.
+
+### Response Types
+
+#### `CityResponse`
+
+```ts
+interface CityResponse {
+    city?: CityRecord;
+    continent?: ContinentRecord;
+    country?: CountryRecord;
+    location?: LocationRecord;
+}
+```
+
+#### `CityRecord`
+
+```ts
+interface CityRecord {
+    geoname_id?: number;
+    names?: Record<string, string>;
+}
+```
+
+#### `ContinentRecord`
+
+```ts
+interface ContinentRecord {
+    code?: string;
+    geoname_id?: number;
+    names?: Record<string, string>;
+}
+```
+
+#### `CountryRecord`
+
+```ts
+interface CountryRecord {
+    geoname_id?: number;
+    iso_code?: string;
+    names?: Record<string, string>;
+}
+```
+
+#### `LocationRecord`
+
+```ts
+interface LocationRecord {
+    latitude?: number;
+    longitude?: number;
+    time_zone?: string;
+}
+```
+
+#### `PrefixResponse`
+
+```ts
+interface PrefixResponse {
+    city: CityResponse;
+    prefix_length: number;
+}
+```
+
+#### `Metadata`
+
+```ts
+interface Metadata {
+    binary_format_major_version: number;
+    binary_format_minor_version: number;
+    build_epoch: number;
+    database_type: string;
+    description: Record<string, string>;
+    ip_version: number;
+    languages: string[];
+    node_count: number;
+    record_size: number;
+}
 ```
 
 ## Contributing
 
 ### Build Setup
 
-For running the automated build (which includes compiling the rust wasm) you'll need the following tools installed
+For running the automated build (which includes compiling the rust wasm) you'll need the following tools installed:
 
-  - [Deno](https://deno.land/#installation)
+  - [node](https://nodejs.org/en/download/)
+  - [pnpm](https://pnpm.io/installation)
   - [Rust](https://doc.rust-lang.org/cargo/getting-started/installation.html)
-  - [wasm-pack](https://rustwasm.github.io/wasm-pack/installer/)
 
-Once you have all the necessary tools installed, you can just run `deno run --allow-run --allow-read --allow-write build.ts`
-
-It builds the wasm and interfacing javascript and typescript definitions, does some transformation on the javascript to support Deno, and writes it to the dist folder.
+Once you have all the necessary tools installed, you can just run `pnpm build`
 
 ### Testing
 
-Under `test/test.ts`, the single non-comprehensive test downloads the available GeoLite2 test database from the Maxmind github repo, and uses that to test that basic functionality works. Since it fetches the test database over the network every run, it is a little slower (Though the test database is pretty small).
+Under `tests/*`, there are tests for each platform that can be run with the `pnpm test` command. On first run, it will download the test database from the Maxmind github repo.

@@ -1,4 +1,4 @@
-# Contributing to maxminddb-deno
+# Contributing to maxminddb-wasm
 
 👍🎉 First off, thanks for taking the time to contribute! 🎉👍
 
@@ -32,25 +32,25 @@ This project and everyone participating in it is governed by [the repository's c
 
 ### Reporting bugs
 
-This section guides you through submitting a bug report for maxminddb-deno. Following these guidelines helps maintainers and the community understand your report 📝, reproduce the behavior 💻, and find related reports 🔎.
+This section guides you through submitting a bug report for maxminddb-wasm. Following these guidelines helps maintainers and the community understand your report 📝, reproduce the behavior 💻, and find related reports 🔎.
 
-Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report). Fill out [the required template](https://github.com/josh-hemphill/maxminddb-deno/.github/.github/ISSUE_TEMPLATE/bug_report.md), the information it asks for helps us resolve issues faster.
+Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report). Fill out [the required template](https://github.com/josh-hemphill/maxminddb-wasm/.github/.github/ISSUE_TEMPLATE/bug_report.md), the information it asks for helps us resolve issues faster.
 
 #### Before Submitting A Bug Report
 
-  - **Determine** the error or issue happens inside maxminddb-deno code, and is not an expected error in response to user input.
-  - **Perform** a [cursory search](https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/maxminddb-deno+label%3Abug) to see if the problem has already been reported. If it has and the issue is still open, add a comment to the existing issue instead of opening a new one.
+  - **Determine** the error or issue happens inside maxminddb-wasm code, and is not an expected error in response to user input.
+  - **Perform** a [cursory search](https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/maxminddb-wasm+label%3Abug) to see if the problem has already been reported. If it has and the issue is still open, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Bug Report?
 
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
   - **Use a clear and descriptive title** for the issue to identify the problem.
-  - **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you invoked maxminddb-deno, e.g. which function exactly you used, or how you imported it otherwise. When listing steps, **don't just say what you did, but explain how you did it**. For example, if you used an internal function, don't just say you used it, provide what data you passed it, and if/how it was passed back into other maxminddb-deno functions.
+  - **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you invoked maxminddb-wasm, e.g. which function exactly you used, or how you imported it otherwise. When listing steps, **don't just say what you did, but explain how you did it**. For example, if you used an internal function, don't just say you used it, provide what data you passed it, and if/how it was passed back into other maxminddb-wasm functions.
   - **Provide specific examples to demonstrate the steps**. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
   - **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
   - **Explain which behavior you expected to see instead and why.**
-  - **If you're reporting that maxminddb-deno errored out**, provide the whole stack trace in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines), a [file attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/), or put it in a [gist](https://gist.github.com/) and provide link to that gist.
+  - **If you're reporting that maxminddb-wasm errored out**, provide the whole stack trace in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines), a [file attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/), or put it in a [gist](https://gist.github.com/) and provide link to that gist.
   - **If the problem is related to performance or memory**, include a benchmark link with your report.
   - **If the problem wasn't triggered by a specific action**, describe what you were doing before the problem happened and share more information using the guidelines below.
 
@@ -69,13 +69,13 @@ Include details about your configuration and environment:
 
 ### Suggesting Enhancements
 
-This section guides you through submitting an enhancement suggestion for maxminddb-deno, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:.
+This section guides you through submitting an enhancement suggestion for maxminddb-wasm, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:.
 
-Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). Fill in [the template](https://github.com/josh-hemphill/maxminddb-deno/.github/blob/master/.github/ISSUE_TEMPLATE/feature_request.md), including the steps that you imagine you would take if the feature you're requesting existed.
+Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). Fill in [the template](https://github.com/josh-hemphill/maxminddb-wasm/.github/blob/master/.github/ISSUE_TEMPLATE/feature_request.md), including the steps that you imagine you would take if the feature you're requesting existed.
 
 #### Before Submitting An Enhancement Suggestion
 
-  - **Perform** a [cursory search](https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/maxminddb-deno+label%3Afeature) to see if the problem has already been reported. If it has and the issue is still open, add a comment to the existing issue instead of opening a new one.
+  - **Perform** a [cursory search](https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/maxminddb-wasm+label%3Afeature) to see if the problem has already been reported. If it has and the issue is still open, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Enhancement Suggestion?
 
@@ -92,7 +92,7 @@ Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com
 
 ### Your First Code Contribution
 
-Unsure where to begin contributing to maxminddb-deno? You can start by looking through these `beginner` and `help-wanted` issues:
+Unsure where to begin contributing to maxminddb-wasm? You can start by looking through these `beginner` and `help-wanted` issues:
 
   - [Beginner issues][beginner] - issues which should only require a few lines of code, and a test or two.
   - [Help wanted issues][help-wanted] - issues which should be a bit more involved than `beginner` issues.
@@ -102,16 +102,16 @@ While not perfect, number of comments is a reasonable proxy for impact a given c
 
 #### Local development
 
-For instructions on how to setup and run development, see the following [Development Guide](https://github.com/josh-hemphill/maxminddb-deno/docs/development.md)
+For instructions on how to setup and run development, see the following [Development Guide](https://github.com/josh-hemphill/maxminddb-wasm/docs/development.md)
 
 ### Pull Requests
 
 The process described here has several goals:
 
-  - Maintain maxminddb-deno's quality
+  - Maintain maxminddb-wasm's quality
   - Fix problems that are important to users
-  - Engage the community in working toward the best possible maxminddb-deno
-  - Enable a sustainable system for maxminddb-deno's maintainers to review contributions
+  - Engage the community in working toward the best possible maxminddb-wasm
+  - Enable a sustainable system for maxminddb-wasm's maintainers to review contributions
 
 Please follow these steps to have your contribution considered by the maintainers:
 

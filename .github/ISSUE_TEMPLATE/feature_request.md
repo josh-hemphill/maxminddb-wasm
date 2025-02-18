@@ -1,6 +1,6 @@
 ---
 name: "\U0001F680 Feature Request"
-about: I have an idea for maxminddb-deno
+about: I have an idea for maxminddb-wasm
 title: '[Enhance]: %s'
 labels: [feature, feature_request]
 assignees: 'josh-hemphill'
@@ -9,7 +9,7 @@ assignees: 'josh-hemphill'
 
 <!--
 
-Have you read maxminddb-deno's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/josh-hemphill/maxminddb-deno/.github/CODE_OF_CONDUCT.md
+Have you read maxminddb-wasm's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/josh-hemphill/maxminddb-wasm/.github/CODE_OF_CONDUCT.md
 
 -->
 
