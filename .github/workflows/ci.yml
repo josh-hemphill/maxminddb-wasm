@@ -16,6 +16,7 @@ on:
       - "src/**"
       - "test/**"
       - "*.json"
+      - "*.yaml"
   pull_request:
     paths:
       - "**.ts"
@@ -24,6 +25,7 @@ on:
       - "src/**"
       - "test/**"
       - "*.json"
+      - "*.yaml"
     types:
       - opened
       - synchronize
