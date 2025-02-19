@@ -1,9 +1,9 @@
 mod utils;
 
 use maxminddb::geoip2;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use std::collections::BTreeMap;
-use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
+use std::net::IpAddr;
 #[cfg(feature = "talc")]
 use talc::*;
 use tsify_next::Tsify;
@@ -150,38 +150,11 @@ fn convert_city_response(city_record: geoip2::City) -> CityResponse {
     }
 }
 
-#[derive(Serialize, Deserialize, Tsify)]
-#[tsify(into_wasm_abi, from_wasm_abi)]
-pub struct Ipv4Network {
-    pub ip: Ipv4Addr,
-    pub prefix: u8,
-}
-
-#[derive(Serialize, Deserialize, Tsify)]
-#[tsify(into_wasm_abi, from_wasm_abi)]
-pub struct Ipv6Network {
-    pub ip: Ipv6Addr,
-    pub prefix: u8,
-}
-
 #[derive(Serialize, Tsify)]
 #[tsify(into_wasm_abi)]
 pub struct PrefixResponse {
     pub city: CityResponse,
     pub prefix_length: usize,
-}
-
-#[derive(Serialize, Deserialize, Tsify)]
-#[tsify(into_wasm_abi, from_wasm_abi)]
-pub enum IpNetwork {
-    V4(Ipv4Network),
-    V6(Ipv6Network),
-}
-
-#[derive(Serialize, Deserialize, Tsify)]
-#[tsify(into_wasm_abi)]
-pub struct IpAddrResponse {
-    pub address: String,
 }
 
 #[wasm_bindgen]

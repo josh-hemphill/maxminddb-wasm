@@ -5,11 +5,19 @@
   <strong>A library that enables the usage of MaxmindDB geoIP databases by using the Rust library in a WebAssembly module</strong>
 
   <p>
-    <a href="https://github.com/josh-hemphill/maxminddb-wasm/releases"><img src="https://img.shields.io/github/v/tag/josh-hemphill/subslate?sort=semver&style=flat-square" alt="version" /></a>
-    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/test.yml"><img src="https://img.shields.io/github/workflow/status/josh-hemphill/maxminddb-wasm/Test?label=Tests&style=flat-square" alt="Test Status" /></a>
-    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/build.yml"><img src="https://img.shields.io/github/workflow/status/josh-hemphill/maxminddb-wasm/Build?label=Build&style=flat-square" alt="Build Status" /></a>
-    <a href="https://deno.land/x/maxminddb/mod.ts"><img src="https://img.shields.io/static/v1?label=&message=Deno&logo=deno&color=informational&style=flat-square" alt="Deno Page" /></a>
-    <a href="https://doc.deno.land/https/deno.land/x/maxminddb/mod.ts"><img src="https://img.shields.io/static/v1?label=&message=API-Doc&color=informational&style=flat-square&logo=deno" alt="API doc" /></a>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/releases"><img src="https://img.shields.io/github/v/tag/josh-hemphill/maxminddb-wasm?sort=semver&style=flat-square" alt="version" /></a>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/josh-hemphill/maxminddb-wasm/ci.yml?label=CI&style=flat-square" alt="CI Status" /></a>
+    <a href="https://www.npmjs.com/package/maxminddb-wasm"><img src="https://img.shields.io/npm/v/maxminddb-wasm?label=NPM&message=NPM&logo=nodedotjs&color=informational" alt="NPM" /></a>
+    <a href="https://jsr.io/@josh-hemphill/maxminddb-wasm"><img src="https://img.shields.io/jsr/v/%40josh-hemphill/maxminddb-wasm?label=JSR&message=JSR&logo=jsr&color=informational&style=flat-square" alt="jsr.io" /></a>
+    <a href="https://deno.land/x/maxminddb/mod.ts"><img src="https://img.shields.io/static/v1?label=&message=Deno.Land&logo=deno&color=informational&style=flat-square" alt="Deno Land" /></a>
+  </p>
+  <p>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/ci.yml"><img src=".github/badges/test-deno.svg" alt="Deno Status" /></a>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/ci.yml"><img src=".github/badges/test-bun.svg" alt="Bun Status" /></a>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/ci.yml"><img src=".github/badges/test-browser.svg" alt="Browser Status" /></a>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/ci.yml"><img src=".github/badges/test-cloudflare.svg" alt="Cloudflare Status" /></a>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/ci.yml"><img src=".github/badges/test-node.svg" alt="Node CJS Status" /></a>
+    <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/ci.yml"><img src=".github/badges/test-node-module.svg" alt="Node Module Status" /></a>
   </p>
 </div>
 
