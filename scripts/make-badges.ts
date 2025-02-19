@@ -1,23 +1,24 @@
 import 'zx/globals';
 import { makeBadge } from 'badge-maker'
 const testSummary = fs.readJsonSync('./pnpm-exec-summary.json') as typeof import('../pnpm-exec-summary.json');
+const logos = fs.readJsonSync('./.github/badges/logos.json') as typeof import('../.github/badges/logos.json');
 const degraded: string[] = [];
 let comment = '### Test Results\n\n';
 comment += '| Test Suite | Status |\n';
 comment += '|------------|---------|\n';
-Object.entries(testSummary.executionStatus).map(([pathName, status]) => {
-	const name = pathName.split(path.sep).pop();
+Object.entries(testSummary.executionStatus).map(([name, status]) => {
+	const label = name.split(path.sep).pop();
 	const simpleStatus = status.status === 'passed' ? 'pass' :
 		status.status === 'skipped' ? 'skip' :
 			status.status === 'failure' ? 'fail' :
 				status.status;
 	return {
-		label: name,
+		label,
 		message: simpleStatus,
 		color: status.status === 'passed' ? 'green' : 'red',
 		style: 'flat-square' as const,
-		logoBase64: logos[name as keyof typeof logos] || undefined
-	};
+		logoBase64: logos[label as keyof typeof logos]
+	}
 }).forEach((spec) => {
 	const svg = makeBadge(spec);
 	const statPath = `.github/badges/test-stats-${spec.label}.json`;

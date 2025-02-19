@@ -49,20 +49,10 @@ jobs:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Rust
-        run: rustup toolchain install stable --target wasm32-unknown-unknown
-
-      - uses: jetli/wasm-bindgen-action@v0.2.0
-        with:
-          version: 'latest'
+        uses: actions/checkout@v4
 
       - name: Setup and cache dependencies
         uses: ./.github/actions/setup-and-cache
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --no-optional
 
       - name: Build
         run: pnpm build

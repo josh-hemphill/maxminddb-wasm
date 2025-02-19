@@ -4,7 +4,7 @@ import 'zx/globals'
 import { versionBump } from 'bumpp'
 
 try {
-	const packages = await glob(['package.json'], { expandDirectories: false })
+	const packages = await glob(['package.json', 'jsr.json'], { expandDirectories: false })
 
 	console.log('Bumping versions in packages:', packages.join(', '), '\n')
 
@@ -17,7 +17,7 @@ try {
 
 	if (!result.newVersion.includes('beta')) {
 		console.log('Pushing to release branch')
-		await $`git update-ref refs/heads/release refs/heads/main`
+		await $`git update-ref refs/heads/release refs/heads/dev`
 		await $`git push origin release`
 	}
 	console.log('New release is ready, waiting for conformation at https://github.com/josh-hemphill/maxminddb-wasm/actions')

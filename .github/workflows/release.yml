@@ -21,15 +21,16 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Set node version to 22
-        uses: actions/setup-node@v4
+      - name: Setup and cache dependencies
+        uses: ./.github/actions/setup-and-cache
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: .

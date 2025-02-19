@@ -70,6 +70,13 @@ if (cliArgs['build-js']) {
 	await $`wasm-bindgen \
 	--target ${target} ./target/wasm32-unknown-unknown/${profile}/index.wasm \
 	--out-dir ./${targetToDir}`;
+
+	if (target === 'bundler') {
+		const indexJs = await fs.readFile(`./${targetToDir}/index.js`, 'utf-8')
+		const indexJsJSRTypePath = `/* @ts-self-types="./index.d.ts" */
+${indexJs}`
+		await fs.writeFile(`./${targetToDir}/index.js`, indexJsJSRTypePath)
+	}
 }
 
 if (cliArgs['fetch-test-artifacts']) {

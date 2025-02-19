@@ -32,9 +32,9 @@ const releaseTag = version.includes('beta')
 console.log('Publishing version', version, 'with tag', releaseTag || 'latest')
 
 if (releaseTag) {
-	await $`pnpm -r publish --access public --no-git-checks --tag ${releaseTag}`
+	await $`pnpm publish --access public --no-git-checks --tag ${releaseTag}`
 }
 else {
-	await $`pnpm -r publish --access public --no-git-checks`
+	await $`pnpm publish --access public --no-git-checks`
 }
 await $`pnpm dlx jsr publish`
