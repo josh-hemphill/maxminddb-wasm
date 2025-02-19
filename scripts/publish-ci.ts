@@ -31,10 +31,12 @@ const releaseTag = version.includes('beta')
 
 console.log('Publishing version', version, 'with tag', releaseTag || 'latest')
 
+fs.appendFileSync('.npmrc', `//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}`)
+
 if (releaseTag) {
 	await $`pnpm publish --access public --no-git-checks --tag ${releaseTag}`
 }
 else {
 	await $`pnpm publish --access public --no-git-checks`
 }
-await $`pnpm dlx jsr publish`
+await $`pnpm dlx jsr publish --allow-dirty`
