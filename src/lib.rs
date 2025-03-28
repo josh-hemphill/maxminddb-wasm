@@ -63,6 +63,8 @@ pub struct CityResponse {
     #[tsify(optional)]
     pub country: Option<CountryRecord>,
     #[tsify(optional)]
+    pub subdivisions: Option<Vec<SubdivisionRecord>>,
+    #[tsify(optional)]
     pub location: Option<LocationRecord>,
     // Add other fields you need
 }
@@ -90,6 +92,17 @@ pub struct ContinentRecord {
 #[derive(Serialize, Tsify)]
 #[tsify(into_wasm_abi)]
 pub struct CountryRecord {
+    #[tsify(optional)]
+    pub geoname_id: Option<u32>,
+    #[tsify(optional)]
+    pub iso_code: Option<String>,
+    #[tsify(optional)]
+    pub names: Option<BTreeMap<String, String>>,
+}
+
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct SubdivisionRecord {
     #[tsify(optional)]
     pub geoname_id: Option<u32>,
     #[tsify(optional)]
@@ -141,6 +154,17 @@ fn convert_city_response(city_record: geoip2::City) -> CityResponse {
                     .map(|(k, v)| (k.to_string(), v.to_string()))
                     .collect()
             }),
+        }),
+        subdivisions: city_record.subdivisions.map(|subdivisions| {
+            subdivisions.into_iter().map(|sub| SubdivisionRecord {
+                geoname_id: sub.geoname_id,
+                iso_code: sub.iso_code.map(|s| s.to_string()),
+                names: sub.names.map(|n| {
+                    n.into_iter()
+                        .map(|(k, v)| (k.to_string(), v.to_string()))
+                        .collect()
+                }),
+            }).collect()
         }),
         location: city_record.location.map(|loc| LocationRecord {
             latitude: loc.latitude,
