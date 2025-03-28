@@ -146,6 +146,7 @@ interface CityResponse {
     city?: CityRecord;
     continent?: ContinentRecord;
     country?: CountryRecord;
+    subdivisions?: SubdivisionRecord[];
     location?: LocationRecord;
 }
 ```
@@ -173,6 +174,15 @@ interface ContinentRecord {
 
 ```ts
 interface CountryRecord {
+    geoname_id?: number;
+    iso_code?: string;
+    names?: Record<string, string>;
+}
+```
+
+#### `SubdivisionRecord`
+```ts
+interface SubdivisionRecord {
     geoname_id?: number;
     iso_code?: string;
     names?: Record<string, string>;
