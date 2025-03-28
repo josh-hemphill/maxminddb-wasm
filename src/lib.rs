@@ -193,7 +193,11 @@ impl Maxmind {
 
     pub fn lookup_city(&self, ip_str: &str) -> Result<CityResponse, JsError> {
         let ip_addr_str: IpAddr = ip_str.parse::<IpAddr>().expect_throw("Invalid IP");
-        let result: geoip2::City = self.db.lookup(ip_addr_str).expect_throw("Result Not Found");
+        let result: geoip2::City = self
+            .db
+            .lookup(ip_addr_str)
+            .expect_throw("Lookup Error")
+            .expect_throw("Result Not Found");
 
         // Convert the geoip2::City to our CityResponse
         let response = convert_city_response(result);
@@ -203,12 +207,12 @@ impl Maxmind {
 
     pub fn lookup_prefix(&self, ip_str: &str) -> Result<PrefixResponse, JsError> {
         let ip_addr_str: IpAddr = ip_str.parse::<IpAddr>().expect_throw("Invalid IP");
-        let result: (geoip2::City, usize) = self
+        let result: (Option<geoip2::City>, usize) = self
             .db
             .lookup_prefix(ip_addr_str)
-            .expect_throw("Result Not Found");
+            .expect_throw("Lookup Error");
 
-        let response = convert_city_response(result.0);
+        let response = convert_city_response(result.0.expect_throw("Result Not Found"));
 
         Ok(PrefixResponse {
             city: response,
