@@ -35,6 +35,8 @@ on:
       release:
         type: boolean
         default: false
+permissions:
+  pull-requests: write
 
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
