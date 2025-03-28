@@ -181,6 +181,7 @@ interface CountryRecord {
 ```
 
 #### `SubdivisionRecord`
+
 ```ts
 interface SubdivisionRecord {
     geoname_id?: number;
