@@ -152,6 +152,7 @@ pub struct PrefixResponse {
     pub prefix_length: usize,
 }
 
+/// MaxMind database reader.
 #[wasm_bindgen]
 pub struct Maxmind {
     db: maxminddb::Reader<Vec<u8>>,
