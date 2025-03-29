@@ -23,6 +23,14 @@ static ALLOCATOR: talc::Talck<spin::Mutex<()>, ClaimOnOom> = talc::Talc::new(uns
 })
 .lock();
 
+/// Metadata about the MaxMind database.
+///
+/// @example
+/// ```js
+/// const metadata = maxmind.getMetadata();
+/// console.log(metadata.databaseType); // "GeoIP2-City"
+/// console.log(metadata.buildEpoch); // 1234567890
+/// ```
 #[derive(Serialize, Tsify)]
 #[tsify(into_wasm_abi)]
 pub struct Metadata {
@@ -53,6 +61,73 @@ impl Metadata {
     }
 }
 
+/// Record containing city information including name and geoname ID.
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct CityRecord {
+    #[tsify(optional)]
+    pub geoname_id: Option<u32>,
+    #[tsify(optional)]
+    pub names: Option<BTreeMap<String, String>>,
+}
+
+/// Record containing continent information including code, geoname ID, and localized names.
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct ContinentRecord {
+    #[tsify(optional)]
+    pub code: Option<String>,
+    #[tsify(optional)]
+    pub geoname_id: Option<u32>,
+    #[tsify(optional)]
+    pub names: Option<BTreeMap<String, String>>,
+}
+
+/// Record containing country information including ISO code, geoname ID, and localized names.
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct CountryRecord {
+    #[tsify(optional)]
+    pub geoname_id: Option<u32>,
+    #[tsify(optional)]
+    pub iso_code: Option<String>,
+    #[tsify(optional)]
+    pub names: Option<BTreeMap<String, String>>,
+}
+
+/// Record containing subdivision (state/province) information including ISO code, geoname ID, and localized names.
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct SubdivisionRecord {
+    #[tsify(optional)]
+    pub geoname_id: Option<u32>,
+    #[tsify(optional)]
+    pub iso_code: Option<String>,
+    #[tsify(optional)]
+    pub names: Option<BTreeMap<String, String>>,
+}
+
+/// Record containing location information including latitude, longitude, and timezone.
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct LocationRecord {
+    #[tsify(optional)]
+    pub latitude: Option<f64>,
+    #[tsify(optional)]
+    pub longitude: Option<f64>,
+    #[tsify(optional)]
+    pub time_zone: Option<String>,
+}
+
+/// Response containing city-level geolocation data for an IP address.
+///
+/// @example
+/// ```js
+/// const response = maxmind.lookupCity("8.8.8.8");
+/// console.log(response.city?.names?.en); // "Mountain View"
+/// console.log(response.country?.isoCode); // "US"
+/// console.log(response.location?.latitude); // 37.4223
+/// ```
 #[derive(Serialize, Tsify)]
 #[tsify(into_wasm_abi)]
 pub struct CityResponse {
@@ -69,57 +144,12 @@ pub struct CityResponse {
     // Add other fields you need
 }
 
+/// Response containing city-level geolocation data and the network prefix length for an IP address.
 #[derive(Serialize, Tsify)]
 #[tsify(into_wasm_abi)]
-pub struct CityRecord {
-    #[tsify(optional)]
-    pub geoname_id: Option<u32>,
-    #[tsify(optional)]
-    pub names: Option<BTreeMap<String, String>>,
-}
-
-#[derive(Serialize, Tsify)]
-#[tsify(into_wasm_abi)]
-pub struct ContinentRecord {
-    #[tsify(optional)]
-    pub code: Option<String>,
-    #[tsify(optional)]
-    pub geoname_id: Option<u32>,
-    #[tsify(optional)]
-    pub names: Option<BTreeMap<String, String>>,
-}
-
-#[derive(Serialize, Tsify)]
-#[tsify(into_wasm_abi)]
-pub struct CountryRecord {
-    #[tsify(optional)]
-    pub geoname_id: Option<u32>,
-    #[tsify(optional)]
-    pub iso_code: Option<String>,
-    #[tsify(optional)]
-    pub names: Option<BTreeMap<String, String>>,
-}
-
-#[derive(Serialize, Tsify)]
-#[tsify(into_wasm_abi)]
-pub struct SubdivisionRecord {
-    #[tsify(optional)]
-    pub geoname_id: Option<u32>,
-    #[tsify(optional)]
-    pub iso_code: Option<String>,
-    #[tsify(optional)]
-    pub names: Option<BTreeMap<String, String>>,
-}
-
-#[derive(Serialize, Tsify)]
-#[tsify(into_wasm_abi)]
-pub struct LocationRecord {
-    #[tsify(optional)]
-    pub latitude: Option<f64>,
-    #[tsify(optional)]
-    pub longitude: Option<f64>,
-    #[tsify(optional)]
-    pub time_zone: Option<String>,
+pub struct PrefixResponse {
+    pub city: CityResponse,
+    pub prefix_length: usize,
 }
 
 #[wasm_bindgen]
@@ -156,15 +186,18 @@ fn convert_city_response(city_record: geoip2::City) -> CityResponse {
             }),
         }),
         subdivisions: city_record.subdivisions.map(|subdivisions| {
-            subdivisions.into_iter().map(|sub| SubdivisionRecord {
-                geoname_id: sub.geoname_id,
-                iso_code: sub.iso_code.map(|s| s.to_string()),
-                names: sub.names.map(|n| {
-                    n.into_iter()
-                        .map(|(k, v)| (k.to_string(), v.to_string()))
-                        .collect()
-                }),
-            }).collect()
+            subdivisions
+                .into_iter()
+                .map(|sub| SubdivisionRecord {
+                    geoname_id: sub.geoname_id,
+                    iso_code: sub.iso_code.map(|s| s.to_string()),
+                    names: sub.names.map(|n| {
+                        n.into_iter()
+                            .map(|(k, v)| (k.to_string(), v.to_string()))
+                            .collect()
+                    }),
+                })
+                .collect()
         }),
         location: city_record.location.map(|loc| LocationRecord {
             latitude: loc.latitude,
@@ -174,24 +207,40 @@ fn convert_city_response(city_record: geoip2::City) -> CityResponse {
     }
 }
 
-#[derive(Serialize, Tsify)]
-#[tsify(into_wasm_abi)]
-pub struct PrefixResponse {
-    pub city: CityResponse,
-    pub prefix_length: usize,
-}
-
+/// MaxMind database reader.
 #[wasm_bindgen]
 impl Maxmind {
+    /// Creates a new MaxMind database reader from a binary database file.
+    ///
+    /// @example
+    /// ```js
+    /// const db = new Maxmind(dbBinary);
+    /// ```
     #[wasm_bindgen(constructor)]
-    pub fn new(js_db: Box<[u8]>) -> Maxmind {
+    pub fn new(
+        #[wasm_bindgen(param_description = "The binary database file as a Uint8Array")] js_db: Box<
+            [u8],
+        >,
+    ) -> Maxmind {
         let local_arr: Vec<u8> = js_db.into_vec();
         Maxmind {
             db: maxminddb::Reader::from_source(local_arr).expect_throw("Invalid Database Binary"),
         }
     }
 
-    pub fn lookup_city(&self, ip_str: &str) -> Result<CityResponse, JsError> {
+    /// Looks up city-level geolocation data for an IP address.
+    ///
+    /// @example
+    /// ```js
+    /// const response = maxmind.lookupCity("8.8.8.8");
+    /// console.log(response.city?.names?.en); // "Mountain View"
+    /// console.log(response.country?.isoCode); // "US"
+    /// ```
+    #[wasm_bindgen(return_description = "City-level geolocation data for the IP address")]
+    pub fn lookup_city(
+        &self,
+        #[wasm_bindgen(param_description = "IPv4 or IPv6 address to look up")] ip_str: &str,
+    ) -> Result<CityResponse, JsError> {
         let ip_addr_str: IpAddr = ip_str.parse::<IpAddr>().expect_throw("Invalid IP");
         let result: geoip2::City = self
             .db
@@ -205,7 +254,19 @@ impl Maxmind {
         Ok(response)
     }
 
-    pub fn lookup_prefix(&self, ip_str: &str) -> Result<PrefixResponse, JsError> {
+    /// Looks up city-level geolocation data and prefix length for an IP address.
+    ///
+    /// @example
+    /// ```js
+    /// const response = maxmind.lookupPrefix("8.8.8.8");
+    /// console.log(response.city?.names?.en); // "Mountain View"
+    /// console.log(response.prefixLength); // 24
+    /// ```
+    #[wasm_bindgen(return_description = "City-level geolocation data and network prefix length")]
+    pub fn lookup_prefix(
+        &self,
+        #[wasm_bindgen(param_description = "IPv4 or IPv6 address to look up")] ip_str: &str,
+    ) -> Result<PrefixResponse, JsError> {
         let ip_addr_str: IpAddr = ip_str.parse::<IpAddr>().expect_throw("Invalid IP");
         let result: (Option<geoip2::City>, usize) = self
             .db
@@ -220,13 +281,22 @@ impl Maxmind {
         })
     }
 
-    #[wasm_bindgen(getter = metadata)]
+    /// Gets metadata about the loaded MaxMind database.
+    ///
+    /// @example
+    /// ```js
+    /// const metadata = maxmind.getMetadata();
+    /// console.log(metadata.databaseType); // "GeoIP2-City"
+    /// console.log(metadata.buildEpoch); // 1234567890
+    /// ```
+    #[wasm_bindgen(getter = metadata, return_description = "Metadata about the loaded database")]
     pub fn get_metadata(&self) -> Result<Metadata, JsError> {
         let metadata = Metadata::new(&self.db);
         Ok(metadata)
     }
 }
 
+/// Initialize the MaxMind database reader.
 #[wasm_bindgen(start)]
 pub fn run() -> Result<(), JsValue> {
     utils::set_panic_hook();
