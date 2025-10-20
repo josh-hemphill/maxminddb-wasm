@@ -15,6 +15,6 @@
 	},
 	"optionalDependencies": {
 		"@vitest/browser": "3.0.5",
-		"playwright": "1.46.1"
+		"playwright": "1.55.1"
 	}
 }
