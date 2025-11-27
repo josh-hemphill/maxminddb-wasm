@@ -16,16 +16,9 @@ try {
 		all: true,
 	})
 
-	await $`tsx scripts/changelog.ts --recreateChangelog`
-	await $`git add CHANGELOG.md`
-	await $`git commit -m "ci: update changelog [skip ci]"`
-
-	const latestTagExists = await $`git tag -l latest`.nothrow()
-	if (latestTagExists) {
-		await $`git tag -d latest`
-		await $`git push origin :refs/tags/latest`
-	}
-	await $`git tag latest`
+	await $`tsx scripts/changelog.ts --recreateChangelog`.nothrow();
+	await $`git add CHANGELOG.md`.nothrow();
+	await $`git commit -m "ci: update changelog [skip ci]"`;
 
 	if (!result.newVersion.includes('beta')) {
 		console.log('Pushing to release branch')
