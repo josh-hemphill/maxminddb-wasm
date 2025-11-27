@@ -37,20 +37,17 @@
 	},
 	"homepage": "https://github.com/josh-hemphill/maxminddb-wasm",
 	"devDependencies": {
-		"@types/node": "^22.13.4",
+		"@types/node": "^24.10.1",
 		"@types/fs-extra": "^11.0.4",
-		"acorn": "^8.14.0",
-		"ast-types": "^0.16.1",
-		"badge-maker": "^4.1.0",
-		"bumpp": "^10.0.3",
-		"changelogithub": "^13.13.0",
-		"recast": "^0.23.9",
-		"semantic-release": "^24",
-		"semantic-release-gitmoji": "^1",
-		"semantic-release-license": "^1",
-		"tsx": "^4.19.2",
+		"acorn": "^8.15.0",
+		"ast-types": "^0.14.2",
+		"badge-maker": "^5.0.2",
+		"bumpp": "^10.3.2",
+		"changelogithub": "^14.0.0",
+		"recast": "^0.23.11",
+		"tsx": "^4.20.6",
 		"wasm-pack": "^0.13.1",
-		"zx": "^8.3.2"
+		"zx": "^8.8.5"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
