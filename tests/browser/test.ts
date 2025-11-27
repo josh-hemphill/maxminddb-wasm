@@ -1,10 +1,10 @@
 import { test, describe, expect, it } from 'vitest'
-import { server } from '@vitest/browser/context'
+import { server } from '@vitest/browser-playwright/context'
 
 import { Maxmind } from '../../browser/index.js'
 const { readFile } = server.commands
 
-const dbFile = await readFile('../.GeoLite2-City-Test.mmdb', 'binary')
+const dbFile = ((await readFile('../.GeoLite2-City-Test.mmdb', 'binary')) as unknown) as Uint8Array<ArrayBufferLike>
 
 
 describe('Maxmind DB', () => {
