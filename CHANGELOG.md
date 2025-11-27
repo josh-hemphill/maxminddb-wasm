@@ -1,4 +1,19 @@
 
+# Release [v2.1.1](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.1)
+
+### &nbsp;&nbsp;&nbsp;Documentation
+
+- 📝  fix JSR import example &nbsp;-&nbsp; by **josh-hemphill** [<samp>(a62cf)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/a62cf50)
+
+### &nbsp;&nbsp;&nbsp;Build
+
+- ⬆️  Update deps &nbsp;-&nbsp; by **josh-hemphill** [<samp>(2d92e)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/2d92ebc)
+- ⬆️  Update Rust deps &nbsp;-&nbsp; by **josh-hemphill** [<samp>(01510)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/01510f4)
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.1.1...v2.1.2)
+
+
+
 # Release [v2.1.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.0)
 
 ### &nbsp;&nbsp;&nbsp;Documentation
