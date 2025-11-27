@@ -106,6 +106,8 @@ jobs:
               body: comment
             });
 
+      - name: git pull
+        run: git pull origin
       - name: Commit test badges
         if: github.event.pull_request.number == null && inputs.release == false
         uses: stefanzweifel/git-auto-commit-action@v7
