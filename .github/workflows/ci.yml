@@ -37,6 +37,7 @@ on:
         default: false
 permissions:
   pull-requests: write
+  contents: write
 
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
