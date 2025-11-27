@@ -24,8 +24,8 @@ js-sys = "0.3"
 cfg-if = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
-serde-wasm-bindgen = "0.6.3"
-tsify-next = "0.5.5"
+serde-wasm-bindgen = "0.6.5"
+tsify-next = "0.5.6"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
@@ -35,7 +35,7 @@ console_error_panic_hook = { version = "0.1", optional = true }
 
 # `wee_alloc` is now deprecated, so we use talc, which seems to be the best
 # alternative. `talc` also requires nightly Rust.
-talc = { version = "4.4.2", optional = true }
+talc = { version = "4.4.3", optional = true }
 spin = { version = "0.10.0", optional = true }
 
 [dev-dependencies]
