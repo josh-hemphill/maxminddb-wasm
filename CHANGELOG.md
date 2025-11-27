@@ -1,5 +1,5 @@
 
-# Release [v2.1.1](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.1)
+# Release [v2.1.8](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.8)
 
 ### &nbsp;&nbsp;&nbsp;📚 Documentation
 
@@ -15,9 +15,9 @@
 - Fix lockfile versions installed &nbsp;-&nbsp; by **josh-hemphill** [<samp>(7af11)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/7af117c)
 - Fix release script &nbsp;-&nbsp; by **josh-hemphill** [<samp>(198b4)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/198b43f)
 
-##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.1.8...v2.1.1)
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.1.1...v2.1.8)
 
-# Release [v2.1.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.0)
+# Release [v2.1.1](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.1)
 
 ### &nbsp;&nbsp;&nbsp;📚 Documentation
 
@@ -27,9 +27,9 @@
 
 - Release v2.1.1 &nbsp;-&nbsp; by **josh-hemphill** [<samp>(fe840)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/fe84035)
 
-##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.1.1...v2.1.0)
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.1.0...v2.1.1)
 
-# Release [v2.0.3](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.0.3)
+# Release [v2.1.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.0)
 
 ### &nbsp;&nbsp;&nbsp;🚀 Features
 
@@ -42,36 +42,36 @@
 - Test dependency fix &nbsp;-&nbsp; by **josh-hemphill** [<samp>(879f8)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/879f8ad)
 - Release v2.1.0 &nbsp;-&nbsp; by **josh-hemphill** [<samp>(89cf4)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/89cf469)
 
-##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.1.0...v2.0.3)
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.0.3...v2.1.0)
 
-# Release [v2.0.2](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.0.2)
+# Release [v2.0.3](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.0.3)
 
 ### &nbsp;&nbsp;&nbsp;🧰 Miscellaneous
 
 - Another release fix &nbsp;-&nbsp; by **josh-hemphill** [<samp>(3899e)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/3899eed)
 - Release v2.0.3 &nbsp;-&nbsp; by **josh-hemphill** [<samp>(2f24f)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/2f24f96)
 
-##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.0.3...v2.0.2)
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.0.2...v2.0.3)
 
-# Release [v2.0.1](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.0.1)
+# Release [v2.0.2](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.0.2)
 
 ### &nbsp;&nbsp;&nbsp;🧰 Miscellaneous
 
 - 🚀  fix release automation &nbsp;-&nbsp; by **josh-hemphill** [<samp>(f4fd3)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/f4fd370)
 - Release v2.0.2 &nbsp;-&nbsp; by **josh-hemphill** [<samp>(3c9b8)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/3c9b87a)
 
-##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.0.2...v2.0.1)
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.0.1...v2.0.2)
 
-# Release [v2.0.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.0.0)
+# Release [v2.0.1](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.0.1)
 
 ### &nbsp;&nbsp;&nbsp;🧰 Miscellaneous
 
 - Fix release files &nbsp;-&nbsp; by **josh-hemphill** [<samp>(feb90)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/feb9059)
 - Release v2.0.1 &nbsp;-&nbsp; by **josh-hemphill** [<samp>(034b8)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/034b8be)
 
-##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.0.1...v2.0.0)
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.0.0...v2.0.1)
 
-# Release [v1.2.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v1.2.0)
+# Release [v2.0.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.0.0)
 
 ### &nbsp;&nbsp;&nbsp;🚨 Breaking Changes
 
@@ -94,9 +94,9 @@
 
 - Release v2.0.0 &nbsp;-&nbsp; by **josh-hemphill** [<samp>(ec8f2)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/ec8f2e5)
 
-##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.0.0...v1.2.0)
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v1.2.0...v2.0.0)
 
-# Release [v1.1.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v1.1.0)
+# Release [v1.2.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v1.2.0)
 
 ### &nbsp;&nbsp;&nbsp;🚀 Features
 
@@ -110,9 +110,9 @@
 
 - **release**: 1.2.0 [skip ci] &nbsp;-&nbsp; by **semantic-release-bot** [<samp>(31902)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/319021a)
 
-##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v1.2.0...v1.1.0)
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v1.1.0...v1.2.0)
 
-# Release [v1.0.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v1.0.0)
+# Release [v1.1.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v1.1.0)
 
 ### &nbsp;&nbsp;&nbsp;🚀 Features
 
@@ -123,4 +123,4 @@
 - Minor ci and readme changes &nbsp;-&nbsp; by **josh-hemphill** [<samp>(781d7)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/781d788)
 - **release**: 1.1.0 [skip ci] &nbsp;-&nbsp; by **semantic-release-bot** [<samp>(ed2f2)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/ed2f290)
 
-##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v1.1.0...v1.0.0)
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v1.0.0...v1.1.0)

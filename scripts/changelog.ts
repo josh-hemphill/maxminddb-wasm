@@ -30,11 +30,13 @@ async function getTags() {
 		console.error('No tags found')
 		process.exit(1)
 	}
-	return tags.stdout
+	const _tags = tags.stdout
 		.trim()
 		.split('\n')
-		.map((version, i, arr) => ({ version, i, prev: arr[i - 1] }))
+		.map((version, i, arr) => ({ version, i, prev: arr[i + 1] }))
 		.filter(({ version, prev }) => prev && version !== prev);
+	console.log({ _tags })
+	return _tags;
 }
 
 const run = async () => {
