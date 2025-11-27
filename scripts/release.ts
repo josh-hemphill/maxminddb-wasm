@@ -23,6 +23,7 @@ try {
 	const latestTagExists = await $`git tag -l latest`.nothrow()
 	if (latestTagExists) {
 		await $`git tag -d latest`
+		await $`git push origin :refs/tags/latest`
 	}
 	await $`git tag latest`
 
