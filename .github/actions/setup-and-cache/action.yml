@@ -4,7 +4,7 @@ inputs:
   node-version:
     required: false
     description: Node version for setup-node
-    default: 20.x
+    default: 24.x
 
 runs:
   using: composite
@@ -24,7 +24,7 @@ runs:
         version: 10
 
     - name: Set node version to ${{ inputs.node-version }}
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}
 

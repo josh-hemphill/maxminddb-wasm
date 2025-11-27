@@ -51,7 +51,7 @@ jobs:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup and cache dependencies
         uses: ./.github/actions/setup-and-cache
@@ -75,7 +75,7 @@ jobs:
             jsr.json
           retention-days: 1
 
-      - uses: browser-actions/setup-chrome@v1
+      - uses: browser-actions/setup-chrome@v2
       - name: Install test dependencies
         run: pnpm install --frozen-lockfile
 
@@ -88,7 +88,7 @@ jobs:
 
       - name: Post Test Results Comment
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
@@ -105,7 +105,7 @@ jobs:
 
       - name: Commit test badges
         if: github.event.pull_request.number == null || inputs.release == false
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "📝 docs: update test badges [skip ci]"
           file_pattern: '*.svg .github/badges/*.json' 
