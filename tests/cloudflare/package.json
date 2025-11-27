@@ -10,12 +10,12 @@
 		"maxminddb-wasm": "workspace:*"
 	},
 	"devDependencies": {
-		"@cloudflare/vitest-pool-workers": "0.8.8",
-		"@cloudflare/workers-types": "4.20250321.0",
-		"typescript": "^5.5.2",
-		"vitest": "~2.1.9"
+		"@cloudflare/vitest-pool-workers": "0.10.11",
+		"@cloudflare/workers-types": "4.20251127.0",
+		"typescript": "^5.9.3",
+		"vitest": "~4.0.14"
 	},
 	"optionalDependencies": {
-		"wrangler": "4.6.0"
+		"wrangler": "4.51.0"
 	}
 }
