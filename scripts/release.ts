@@ -18,7 +18,7 @@ try {
 
 	await $`tsx scripts/changelog.ts --recreateChangelog`.nothrow();
 	await $`git add CHANGELOG.md`.nothrow();
-	await $`git commit -m "ci: update changelog [skip ci]"`;
+	await $`git commit -m "ci: update changelog [skip ci]"`.nothrow();
 
 	if (!result.newVersion.includes('beta')) {
 		console.log('Pushing to release branch')
