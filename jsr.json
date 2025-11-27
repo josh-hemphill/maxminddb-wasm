@@ -1,6 +1,6 @@
 {
 	"name": "@josh-hemphill/maxminddb-wasm",
-	"version": "2.1.2",
+	"version": "2.1.3",
 	"exports": "./bundler/index.js",
 	"publish": {
 		"include": [
