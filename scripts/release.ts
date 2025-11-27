@@ -18,7 +18,7 @@ try {
 
 	await $`tsx scripts/changelog.ts --recreateChangelog`
 	await $`git add CHANGELOG.md`
-	await $`git commit -m "ci: update changelog"`
+	await $`git commit -m "ci: update changelog [skip ci]"`
 
 	const latestTagExists = await $`git tag -l latest`.nothrow()
 	if (latestTagExists) {
