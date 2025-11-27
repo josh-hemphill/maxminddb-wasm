@@ -9,8 +9,9 @@
 
 - ⬆️  Update deps &nbsp;-&nbsp; by **josh-hemphill** [<samp>(2d92e)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/2d92ebc)
 - ⬆️  Update Rust deps &nbsp;-&nbsp; by **josh-hemphill** [<samp>(01510)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/01510f4)
+- ⬆️  update test deps &nbsp;-&nbsp; by **josh-hemphill** [<samp>(8ec80)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/8ec808e)
 
-##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.1.1...v2.1.2)
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.1.1...v2.1.3)
 
 
 
