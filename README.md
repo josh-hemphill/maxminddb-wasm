@@ -9,7 +9,6 @@
     <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/josh-hemphill/maxminddb-wasm/ci.yml?label=CI&style=flat-square" alt="CI Status" /></a>
     <a href="https://www.npmjs.com/package/maxminddb-wasm"><img src="https://img.shields.io/npm/v/maxminddb-wasm?label=NPM&message=NPM&logo=nodedotjs&color=informational" alt="NPM" /></a>
     <a href="https://jsr.io/@josh-hemphill/maxminddb-wasm"><img src="https://img.shields.io/jsr/v/%40josh-hemphill/maxminddb-wasm?label=JSR&message=JSR&logo=jsr&color=informational&style=flat-square" alt="jsr.io" /></a>
-    <a href="https://deno.land/x/maxminddb/mod.ts"><img src="https://img.shields.io/static/v1?label=&message=Deno.Land&logo=deno&color=informational&style=flat-square" alt="Deno Land" /></a>
   </p>
   <p>
     <a href="https://github.com/josh-hemphill/maxminddb-wasm/actions/workflows/ci.yml"><img src=".github/badges/test-deno.svg" alt="Deno Status" /></a>
