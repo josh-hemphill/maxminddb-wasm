@@ -53,6 +53,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Setup and cache dependencies
         uses: ./.github/actions/setup-and-cache
@@ -105,7 +107,7 @@ jobs:
             });
 
       - name: Commit test badges
-        if: github.event.pull_request.number == null || inputs.release == false
+        if: github.event.pull_request.number == null && inputs.release == false
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "📝 docs: update test badges [skip ci]"
