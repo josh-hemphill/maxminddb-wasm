@@ -31,7 +31,7 @@ Uses the [Rust MaxmindDB library](https://crates.io/crates/maxminddb) to create 
   - [x] Deno
   - [x] Bun
   - [/] Browser (tests are flaky, so not certain)
-  - [?] Cloudflare Workers (have not been able to get them to work locally, you can see the tests [here](https://github.com/josh-hemphill/maxminddb-wasm/blob/main/.github/workflows/test.yml))
+  - [?] Cloudflare Workers (have not been able to get them to work locally, you can [see the tests here](https://github.com/josh-hemphill/maxminddb-wasm/blob/main/.github/workflows/test.yml))
 
 ## Installation
 
@@ -46,7 +46,7 @@ pnpm add maxminddb-wasm
 ### Deno ([jsr](https://jsr.io/docs/introduction))
 
 ```ts
-import { Maxmind } from "jsr:@josh-hemphill/maxminddb-wasm/bundler";
+import { Maxmind } from "jsr:@josh-hemphill/maxminddb-wasm";
 ```
 
 ## Usage Examples
@@ -66,7 +66,7 @@ console.log(result);
 ### Deno
 
 ```ts
-import { Maxmind } from "jsr:@josh-hemphill/maxminddb-wasm/bundler";
+import { Maxmind } from "jsr:@josh-hemphill/maxminddb-wasm";
 
 const dbFile = await Deno.readFile('./GeoLite2-City.mmdb');
 const maxmind = new Maxmind(dbFile);
