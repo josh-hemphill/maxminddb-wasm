@@ -1,4 +1,22 @@
 
+# Release [v2.1.1](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.1)
+
+### &nbsp;&nbsp;&nbsp;📚 Documentation
+
+- 📝  fix JSR import example &nbsp;-&nbsp; by **josh-hemphill** [<samp>(a62cf)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/a62cf50)
+- Update test badges [skip ci] &nbsp;-&nbsp; by **josh-hemphill** [<samp>(a73cb)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/a73cb15)
+- Fix changelog gen &nbsp;-&nbsp; by **josh-hemphill** [<samp>(1ab3c)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/1ab3cd5)
+
+### &nbsp;&nbsp;&nbsp;🔄 Build
+
+- ⬆️  Update deps &nbsp;-&nbsp; by **josh-hemphill** [<samp>(2d92e)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/2d92ebc)
+- ⬆️  Update Rust deps &nbsp;-&nbsp; by **josh-hemphill** [<samp>(01510)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/01510f4)
+- ⬆️  update test deps &nbsp;-&nbsp; by **josh-hemphill** [<samp>(8ec80)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/8ec808e)
+- Fix lockfile versions installed &nbsp;-&nbsp; by **josh-hemphill** [<samp>(7af11)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/7af117c)
+- Fix release script &nbsp;-&nbsp; by **josh-hemphill** [<samp>(198b4)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/198b43f)
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.1.8...v2.1.1)
+
 # Release [v2.1.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.0)
 
 ### &nbsp;&nbsp;&nbsp;📚 Documentation
