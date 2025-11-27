@@ -1,4 +1,10 @@
 
+# Release [v2.1.5](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.5)
+
+undefined
+
+
+
 # Release [v2.1.4](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.4)
 
 undefined
