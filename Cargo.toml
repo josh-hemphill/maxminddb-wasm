@@ -19,7 +19,7 @@ crate-type = ["cdylib", "rlib"]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-maxminddb = "0.26.0"
+maxminddb = "0.27.0"
 js-sys = "0.3"
 cfg-if = "1.0"
 serde = { version = "1.0", features = ["derive"] }
