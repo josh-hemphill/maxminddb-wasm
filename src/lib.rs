@@ -152,10 +152,60 @@ pub struct PrefixResponse {
     pub prefix_length: usize,
 }
 
+/// Response containing information about a particular ASN.
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct AsnResponse {
+    #[tsify(optional)]
+    pub as_num: Option<u32>,
+    #[tsify(optional)]
+    pub as_organization: Option<String>,
+}
+
+/// Response containing ISP information for an IP address.
+///
+/// @example
+/// ```js
+/// const response = maxmind.lookupIsp("8.8.8.8");
+/// console.log(response.asn?.as_num); // 15169
+/// console.log(response.asn?.as_organization); // "Google LLC"
+/// console.log(response.isp); // "Google LLC"
+/// console.log(response.organization); // "Google LLC"
+/// ```
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct IspResponse {
+    #[tsify(optional)]
+    pub asn: AsnResponse,
+    #[tsify(optional)]
+    pub isp: Option<String>,
+    #[tsify(optional)]
+    pub organization: Option<String>,
+    #[tsify(optional)]
+    pub mobile_country_code: Option<String>,
+    #[tsify(optional)]
+    pub mobile_network_code: Option<String>,
+}
+
 /// MaxMind database reader.
 #[wasm_bindgen]
 pub struct Maxmind {
     db: maxminddb::Reader<Vec<u8>>,
+}
+
+fn convert_isp_response(isp_record: geoip2::Isp) -> IspResponse {
+    IspResponse {
+        asn: AsnResponse {
+            as_num: isp_record.autonomous_system_number,
+            as_organization: isp_record
+                .autonomous_system_organization
+                .map(|s| s.to_string()),
+        },
+        isp: isp_record.isp.map(|s| s.to_string()),
+        organization: isp_record.organization.map(|s| s.to_string()),
+        mobile_country_code: isp_record.mobile_country_code.map(|s| s.to_string()),
+        mobile_network_code: isp_record.mobile_network_code.map(|s| s.to_string()),
+    }
 }
 
 fn convert_city_response(city_record: geoip2::City) -> CityResponse {
@@ -251,6 +301,34 @@ impl Maxmind {
 
         // Convert the geoip2::City to our CityResponse
         let response = convert_city_response(result);
+
+        Ok(response)
+    }
+
+    /// Looks up ISP data for an IP address.
+    ///
+    /// @example
+    /// ```js
+    /// const response = maxmind.lookupIsp("8.8.8.8");
+    /// console.log(response.asn?.as_num); // 15169
+    /// console.log(response.asn?.as_organization); // "Google LLC"
+    /// console.log(response.isp); // "Google LLC"
+    /// console.log(response.organization); // "Google LLC"
+    /// ```
+    #[wasm_bindgen(return_description = "ISP data for the IP address")]
+    pub fn lookup_isp(
+        &self,
+        #[wasm_bindgen(param_description = "IPv4 or IPv6 address to look up")] ip_str: &str,
+    ) -> Result<IspResponse, JsError> {
+        let ip_addr_str: IpAddr = ip_str.parse::<IpAddr>().expect_throw("Invalid IP");
+        let result: geoip2::Isp = self
+            .db
+            .lookup(ip_addr_str)
+            .expect_throw("Lookup Error")
+            .expect_throw("Result Not Found");
+
+        // Convert the geoip2::Isp to our IspResponse
+        let response = convert_isp_response(result);
 
         Ok(response)
     }
