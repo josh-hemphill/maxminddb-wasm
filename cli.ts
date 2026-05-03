@@ -81,16 +81,23 @@ ${indexJs}`
 
 if (cliArgs['fetch-test-artifacts']) {
 	const __dirname = path.resolve();
-	const dbFilePath = path.join(__dirname, 'tests', '.GeoLite2-City-Test.mmdb');
+	const databases = [
+		'GeoLite2-City-Test.mmdb',
+		'GeoLite2-ASN-Test.mmdb',
+	];
 
-	if (fs.existsSync(dbFilePath)) {
-		console.log('DB File already exists');
-	} else {
+	for (const database of databases) {
+		const dbFilePath = path.join(__dirname, 'tests', `.${database}`);
 
-		const dbFile = await fetch('https://github.com/maxmind/MaxMind-DB/raw/main/test-data/GeoLite2-City-Test.mmdb')
+		if (fs.existsSync(dbFilePath)) {
+			console.log('DB File', database, 'already exists');
+			continue;
+		}
+
+		const dbFile = await fetch(`https://github.com/maxmind/MaxMind-DB/raw/main/test-data/${database}`)
 			.then(v => v.arrayBuffer())
 			.then(v => new Uint8Array(v));
 
-		await fs.writeFile(dbFilePath, dbFile)
+		await fs.writeFile(dbFilePath, dbFile);
 	}
 }

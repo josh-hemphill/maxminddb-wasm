@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { existsSync, mkdir } from 'node:fs';
+import { existsSync } from 'node:fs';
 import process from "node:process";
 
 const __dirname = path.resolve();
@@ -23,3 +23,5 @@ for (const database of databases) {
 
 	await writeFile(dbFilePath, dbFile)
 }
+
+process.exit(0);

@@ -1,14 +1,14 @@
-import { expect, test } from "bun:test";
+import { test } from "bun:test";
 import { Maxmind } from '../../node-module/index.js'
 
 const dbFile = await Bun.file('../.GeoLite2-City-Test.mmdb').bytes()
-const dbFile_AS = await Bun.file('../.GeoLite2-ASN-Test.mmdb').bytes()
+const dbFileAsn = await Bun.file('../.GeoLite2-ASN-Test.mmdb').bytes()
 
 const maxmind = new Maxmind(dbFile)
-const maxmind_AS = new Maxmind(dbFile_AS)
+const maxmindAsn = new Maxmind(dbFileAsn)
 
 const result = maxmind.lookup_city('2a02:d100::0001')
-const result_AS = maxmind_AS.lookup_isp('2c0f:ff80::')
+const resultAsn = maxmindAsn.lookup_isp('2c0f:ff80::')
 
 let tested = false;
 test(
@@ -16,7 +16,7 @@ test(
 	() => {
 		tested = true
 		result?.location?.time_zone === "Europe/Warsaw" || (() => { throw Error("Result Missing") });
-		result_AS?.asn?.as_num === 237 || (() => { throw Error("Result Missing") });
+		resultAsn?.asn?.as_num === 237 || (() => { throw Error("ASN Result Missing") });
 	}
 )
 

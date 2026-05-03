@@ -5,3 +5,15 @@ packages:
   - "tests/bun"
   - "tests/browser"
   - "tests/node-module"
+ignoreWorkspaceRootCheck: true
+strictPeerDependencies: false
+provenance: true
+shellEmulator: true
+allowBuilds:
+  bun: true
+  deno: true
+  esbuild: true
+  msw: true
+  sharp: true
+  wasm-pack: true
+  workerd: true

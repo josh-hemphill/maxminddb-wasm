@@ -14,7 +14,9 @@ on:
       - ".github/workflows/**.yml"
       - ".github/actions/**.yml"
       - "src/**"
-      - "test/**"
+      - "tests/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
       - "*.json"
       - "*.yaml"
   pull_request:
@@ -23,7 +25,9 @@ on:
       - ".github/workflows/**.yml"
       - ".github/actions/**.yml"
       - "src/**"
-      - "test/**"
+      - "tests/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
       - "*.json"
       - "*.yaml"
     types:

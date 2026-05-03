@@ -19,7 +19,9 @@ crate-type = ["cdylib", "rlib"]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-maxminddb = "0.26.0"
+# Optional maxminddb features `simdutf8` / `unsafe-str-decode` can speed string decode; measure `.wasm` size before enabling.
+maxminddb = "0.28.1"
+ipnetwork = "0.21"
 js-sys = "0.3"
 cfg-if = "1.0"
 serde = { version = "1.0", features = ["derive"] }

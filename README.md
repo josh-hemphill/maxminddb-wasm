@@ -60,6 +60,11 @@ const dbFile = await readFile('./GeoLite2-City.mmdb');
 const maxmind = new Maxmind(dbFile);
 const result = maxmind.lookup_city('8.8.8.8');
 console.log(result);
+
+// ASN / ISP database (separate .mmdb file from MaxMind)
+const asnDb = await readFile('./GeoLite2-ASN.mmdb');
+const asnReader = new Maxmind(asnDb);
+console.log(asnReader.lookup_isp('8.8.8.8'));
 ```
 
 ### Deno
@@ -71,6 +76,9 @@ const dbFile = await Deno.readFile('./GeoLite2-City.mmdb');
 const maxmind = new Maxmind(dbFile);
 const result = maxmind.lookup_city('8.8.8.8');
 console.log(result);
+
+const asnDb = await Deno.readFile('./GeoLite2-ASN.mmdb');
+console.log(new Maxmind(asnDb).lookup_isp('8.8.8.8'));
 ```
 
 ### Browser
@@ -131,6 +139,14 @@ Looks up city information for the given IP address.
 ##### `lookup_prefix(ip: string): PrefixResponse`
 
 Looks up network prefix information for the given IP address.
+
+##### `lookup_isp(ip: string): IspResponse`
+
+Looks up ISP and ASN fields for the given IP address. The loaded database must be a compatible product (for example **GeoLite2-ASN** or **GeoIP2-ISP**). City databases do not contain these records.
+
+##### `lookup_isp_prefix(ip: string): IspPrefixResponse`
+
+Same as `lookup_isp`, plus the network prefix length for the matched entry (mirrors `lookup_prefix` for city data).
 
 ##### `metadata: Metadata`
 
@@ -204,6 +220,36 @@ interface LocationRecord {
 ```ts
 interface PrefixResponse {
     city: CityResponse;
+    prefix_length: number;
+}
+```
+
+#### `IspResponse`
+
+```ts
+interface IspResponse {
+    asn?: AsnResponse;
+    isp?: string;
+    organization?: string;
+    mobile_country_code?: string;
+    mobile_network_code?: string;
+}
+```
+
+#### `AsnResponse`
+
+```ts
+interface AsnResponse {
+    as_num?: number;
+    as_organization?: string;
+}
+```
+
+#### `IspPrefixResponse`
+
+```ts
+interface IspPrefixResponse {
+    isp: IspResponse;
     prefix_length: number;
 }
 ```

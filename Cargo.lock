@@ -59,6 +59,7 @@ version = "2.0.0"
 dependencies = [
  "cfg-if",
  "console_error_panic_hook",
+ "ipnetwork",
  "js-sys",
  "maxminddb",
  "serde",
@@ -109,9 +110,9 @@ checksum = "34080505efa8e45a4b816c349525ebe327ceaa8559756f0356cba97ef3bf7432"
 
 [[package]]
 name = "maxminddb"
-version = "0.26.0"
+version = "0.28.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2a197e44322788858682406c74b0b59bf8d9b4954fe1f224d9a25147f1880bba"
+checksum = "faf6467428ad055b71e588bcedcbaf2ff605b3251deb0c52be4a04b674c546dd"
 dependencies = [
  "ipnetwork",
  "log",
