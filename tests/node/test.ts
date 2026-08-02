@@ -6,6 +6,8 @@ import * as _Maxmind from '../../node/index.js'
 
 const dbFile = readFileSync(join(__dirname, '..', '.GeoLite2-City-Test.mmdb'))
 const dbFileAsn = readFileSync(join(__dirname, '..', '.GeoLite2-ASN-Test.mmdb'))
+const dbFileCountry = readFileSync(join(__dirname, '..', '.GeoLite2-Country-Test.mmdb'))
+
 
 describe('Maxmind DB', () => {
 	const maxmind = new _Maxmind.Maxmind(dbFile)
@@ -18,6 +20,22 @@ describe('Maxmind DB', () => {
 	})
 	it('db should have the correct metadata', () => {
 		expect(maxmind?.metadata?.languages?.includes('en')).toBe(true)
+	})
+	it('free after not-found lookup should succeed', () => {
+		const db = new _Maxmind.Maxmind(dbFile)
+		expect(() => db.lookup_city('127.0.0.1')).toThrow(/Result Not Found/)
+		expect(() => db.free()).not.toThrow()
+	})
+})
+
+describe('Maxmind DB Country', () => {
+	const maxmind = new _Maxmind.Maxmind(dbFileCountry)
+	const result = maxmind.lookup_country('2.125.160.216')
+
+	it('should return country for GeoLite2-Country', () => {
+		expect(result).toBeDefined()
+		expect(result.country?.iso_code).toBe('GB')
+		expect(result.continent?.code).toBe('EU')
 	})
 })
 

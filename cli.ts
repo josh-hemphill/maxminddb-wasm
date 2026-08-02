@@ -84,6 +84,7 @@ if (cliArgs['fetch-test-artifacts']) {
 	const databases = [
 		'GeoLite2-City-Test.mmdb',
 		'GeoLite2-ASN-Test.mmdb',
+		'GeoLite2-Country-Test.mmdb',
 	];
 
 	for (const database of databases) {

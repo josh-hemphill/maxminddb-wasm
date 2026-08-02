@@ -65,6 +65,10 @@ console.log(result);
 const asnDb = await readFile('./GeoLite2-ASN.mmdb');
 const asnReader = new Maxmind(asnDb);
 console.log(asnReader.lookup_isp('8.8.8.8'));
+
+// Country database
+const countryDb = await readFile('./GeoLite2-Country.mmdb');
+console.log(new Maxmind(countryDb).lookup_country('8.8.8.8'));
 ```
 
 ### Deno
@@ -134,7 +138,11 @@ Creates a new Maxmind instance with the provided database file.
 
 ##### `lookup_city(ip: string): CityResponse`
 
-Looks up city information for the given IP address.
+Looks up city information for the given IP address. Also works with **GeoLite2-Country** databases for the overlapping country/continent fields; prefer `lookup_country` when you only need country data.
+
+##### `lookup_country(ip: string): CountryResponse`
+
+Looks up country/continent information for the given IP address. Intended for **GeoLite2-Country** / **GeoIP2-Country** databases (also works with City databases).
 
 ##### `lookup_prefix(ip: string): PrefixResponse`
 
@@ -192,6 +200,15 @@ interface CountryRecord {
     geoname_id?: number;
     iso_code?: string;
     names?: Record<string, string>;
+}
+```
+
+#### `CountryResponse`
+
+```ts
+interface CountryResponse {
+    continent?: ContinentRecord;
+    country?: CountryRecord;
 }
 ```
 

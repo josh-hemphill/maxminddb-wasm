@@ -43,17 +43,17 @@ pub struct Metadata {
 }
 impl Metadata {
     pub fn new(db: &maxminddb::Reader<Vec<u8>>) -> Metadata {
-        let metadata = &db.metadata;
+        let metadata = db.metadata();
         Metadata {
-            binary_format_major_version: metadata.binary_format_major_version.clone(),
-            binary_format_minor_version: metadata.binary_format_minor_version.clone(),
-            build_epoch: metadata.build_epoch.clone(),
+            binary_format_major_version: metadata.binary_format_major_version,
+            binary_format_minor_version: metadata.binary_format_minor_version,
+            build_epoch: metadata.build_epoch,
             database_type: metadata.database_type.clone(),
             description: metadata.description.clone(),
-            ip_version: metadata.ip_version.clone(),
+            ip_version: metadata.ip_version,
             languages: metadata.languages.clone(),
-            node_count: metadata.node_count.clone(),
-            record_size: metadata.record_size.clone(),
+            node_count: metadata.node_count,
+            record_size: metadata.record_size,
         }
     }
 }
@@ -138,6 +138,19 @@ pub struct CityResponse {
     pub subdivisions: Option<Vec<SubdivisionRecord>>,
     #[tsify(optional)]
     pub location: Option<LocationRecord>,
+}
+
+/// Response containing country-level geolocation data for an IP address.
+///
+/// Suitable for GeoLite2-Country / GeoIP2-Country databases. City databases also
+/// work via [`Maxmind::lookup_city`], which returns the overlapping country fields.
+#[derive(Serialize, Tsify)]
+#[tsify(into_wasm_abi)]
+pub struct CountryResponse {
+    #[tsify(optional)]
+    pub continent: Option<ContinentRecord>,
+    #[tsify(optional)]
+    pub country: Option<CountryRecord>,
 }
 
 /// Response containing city-level geolocation data and the network prefix length for an IP address.
@@ -310,9 +323,37 @@ fn convert_city_response(city_record: &geoip2::City) -> CityResponse {
 }
 
 fn prefix_len(net: IpNetwork) -> usize {
-    match net {
-        IpNetwork::V4(n) => usize::from(n.prefix()),
-        IpNetwork::V6(n) => usize::from(n.prefix()),
+    usize::from(net.prefix())
+}
+
+fn convert_country_response(country_record: &geoip2::Country) -> CountryResponse {
+    let continent = {
+        let c = &country_record.continent;
+        if c.code.is_none() && c.geoname_id.is_none() && c.names.is_empty() {
+            None
+        } else {
+            Some(ContinentRecord {
+                code: c.code.map(|s| s.to_string()),
+                geoname_id: c.geoname_id,
+                names: names_to_btree(&c.names),
+            })
+        }
+    };
+    let country = {
+        let c = &country_record.country;
+        if c.geoname_id.is_none() && c.iso_code.is_none() && c.names.is_empty() {
+            None
+        } else {
+            Some(CountryRecord {
+                geoname_id: c.geoname_id,
+                iso_code: c.iso_code.map(|s| s.to_string()),
+                names: names_to_btree(&c.names),
+            })
+        }
+    };
+    CountryResponse {
+        continent,
+        country,
     }
 }
 
@@ -380,6 +421,28 @@ impl Maxmind {
             .map_err(map_mm_err)?
             .ok_or_else(|| JsError::new("Result Not Found"))?;
         Ok(convert_city_response(&city))
+    }
+
+    /// Looks up country-level geolocation data for an IP address.
+    /// Prefer this for GeoLite2-Country / GeoIP2-Country databases.
+    ///
+    /// @example
+    /// ```js
+    /// const response = maxmind.lookup_country("8.8.8.8");
+    /// console.log(response.country?.iso_code); // "US"
+    /// ```
+    #[wasm_bindgen(return_description = "Country-level geolocation data for the IP address")]
+    pub fn lookup_country(
+        &self,
+        #[wasm_bindgen(param_description = "IPv4 or IPv6 address to look up")] ip_str: &str,
+    ) -> Result<CountryResponse, JsError> {
+        let ip_addr: IpAddr = ip_str.parse().map_err(|_| JsError::new("Invalid IP"))?;
+        let lr = self.db.lookup(ip_addr).map_err(map_mm_err)?;
+        let country = lr
+            .decode::<geoip2::Country>()
+            .map_err(map_mm_err)?
+            .ok_or_else(|| JsError::new("Result Not Found"))?;
+        Ok(convert_country_response(&country))
     }
 
     /// Looks up ISP / ASN data for an IP address. Requires a compatible database (e.g. GeoLite2-ASN, GeoIP2-ISP).
