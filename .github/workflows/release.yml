@@ -33,12 +33,14 @@ jobs:
       - name: Setup and cache dependencies
         uses: ./.github/actions/setup-and-cache
 
-      - name: Configure npm registry
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24.x
-          registry-url: https://registry.npmjs.org
-          package-manager-cache: false
+      # Do not set setup-node `registry-url` here: it writes
+      # `//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}` and an empty
+      # token blocks the trusted-publisher OIDC exchange (ENEEDAUTH / 404).
+
+      - name: Ensure npm CLI for trusted publishing
+        run: |
+          npm install -g 'npm@^11.5.1'
+          npm --version
 
       - name: Download build artifacts
         uses: actions/download-artifact@v6
@@ -52,4 +54,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish npm and JSR
+        # Trusted publisher OIDC — do not set NODE_AUTH_TOKEN / NPM_TOKEN.
         run: pnpm publish-ci ${{ github.ref_name }}

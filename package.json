@@ -2,7 +2,8 @@
   "name": "maxminddb-wasm",
   "version": "2.2.0",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "main": "./bundler/index.js",
   "types": "./bundler/index.d.ts",
