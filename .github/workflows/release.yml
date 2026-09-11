@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag to publish (e.g. v2.2.0). Defaults to the current ref.
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -23,12 +28,13 @@ jobs:
     permissions:
       contents: write
       id-token: write
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          ref: ${{ inputs.tag || github.ref }}
       
       - name: Setup and cache dependencies
         uses: ./.github/actions/setup-and-cache
@@ -53,6 +59,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish npm and JSR
+      - name: Publish npm
         # Trusted publisher OIDC — do not set NODE_AUTH_TOKEN / NPM_TOKEN.
-        run: pnpm publish-ci ${{ github.ref_name }}
+        run: pnpm publish-ci ${{ inputs.tag || github.ref_name }} --npm-only
+
+      - name: Publish JSR
+        # OIDC uses the user who triggered the workflow. If JSR is set to
+        # "restrict publishing to scope members" (default), that user must
+        # be a member of @josh-hemphill, or set the JSR_TOKEN secret.
+        run: pnpm publish-ci ${{ inputs.tag || github.ref_name }} --jsr-only
+        env:
+          JSR_TOKEN: ${{ secrets.JSR_TOKEN }}
