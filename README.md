@@ -29,8 +29,8 @@ Uses the [Rust MaxmindDB library](https://crates.io/crates/maxminddb) to create 
   - [x] Node.js
   - [x] Deno
   - [x] Bun
-  - [/] Browser (tests are flaky, so not certain)
-  - [?] Cloudflare Workers (have not been able to get them to work locally, you can [see the tests here](https://github.com/josh-hemphill/maxminddb-wasm/blob/main/.github/workflows/test.yml))
+  - [x] Browser
+  - [x] Cloudflare Workers
 
 ## Installation
 
@@ -88,9 +88,10 @@ console.log(new Maxmind(asnDb).lookup_isp('8.8.8.8'));
 ### Browser
 
 ```ts
-import { Maxmind } from 'maxminddb-wasm/browser';
+import init, { Maxmind } from 'maxminddb-wasm/browser';
 
-// Fetch the database file
+await init();
+
 const response = await fetch('/GeoLite2-City.mmdb');
 const dbFile = new Uint8Array(await response.arrayBuffer());
 const maxmind = new Maxmind(dbFile);
@@ -100,10 +101,12 @@ const result = maxmind.lookup_city('8.8.8.8');
 ### Cloudflare Workers
 
 ```ts
-import { Maxmind } from 'maxminddb-wasm/browser';
+import init, { Maxmind } from 'maxminddb-wasm/browser';
+import wasmModule from 'maxminddb-wasm/browser/index_bg.wasm';
 
 export default {
   async fetch(request, env) {
+    await init({ module_or_path: wasmModule });
     const maxmind = new Maxmind(new Uint8Array(env.MAXMIND_DB));
     const ip = request.headers.get('cf-connecting-ip');
     const result = maxmind.lookup_city(ip);
@@ -301,4 +304,4 @@ Once you have all the necessary tools installed, you can just run `pnpm build`
 
 ### Testing
 
-Under `tests/*`, there are tests for each platform that can be run with the `pnpm test` command. On first run, it will download the test database from the Maxmind github repo.
+Under `tests/*`, there are tests for each platform that can be run with the `pnpm test` command. On first run, it downloads the City, Country, and ASN MaxMind test databases.

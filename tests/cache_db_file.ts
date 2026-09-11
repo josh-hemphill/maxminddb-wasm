@@ -2,16 +2,12 @@ import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { existsSync } from 'node:fs';
 import process from "node:process";
+import { TEST_DATABASE_FILES } from './fixtures.ts';
 
-const __dirname = path.resolve();
-const databases = [
-	'GeoLite2-City-Test.mmdb',
-	'GeoLite2-ASN-Test.mmdb',
-	'GeoLite2-Country-Test.mmdb',
-];
+const workspaceRoot = path.resolve();
 
-for (const database of databases) {
-	const dbFilePath = path.join(__dirname, 'tests', `.${database}`);
+for (const database of TEST_DATABASE_FILES) {
+	const dbFilePath = path.join(workspaceRoot, 'tests', `.${database}`);
 
 	if (existsSync(dbFilePath)) {
 		console.log('DB File', database, 'already exists');
