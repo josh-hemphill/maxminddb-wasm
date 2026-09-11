@@ -1,8 +1,6 @@
 #!/usr/bin/env zx
 
 import { readFileSync } from 'node:fs'
-import { homedir } from 'node:os'
-import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import 'zx/globals'
 
@@ -32,13 +30,6 @@ const releaseTag = version.includes('beta')
 		: undefined
 
 console.log('Publishing version', version, 'with tag', releaseTag || 'latest')
-
-const npmToken = process.env.NODE_AUTH_TOKEN
-if (!npmToken) {
-	throw new Error('NODE_AUTH_TOKEN is not set')
-}
-// pnpm 10 will not expand env vars in a project .npmrc.
-fs.appendFileSync(join(homedir(), '.npmrc'), `\n//registry.npmjs.org/:_authToken=${npmToken}\n`)
 
 if (releaseTag) {
 	await $`pnpm publish --access public --no-git-checks --tag ${releaseTag}`
