@@ -9,6 +9,6 @@
 		"maxminddb-wasm": "workspace:*"
 	},
 	"optionalDependencies": {
-		"deno": "2.5.6"
+		"deno": "2.9.6"
 	}
 }
