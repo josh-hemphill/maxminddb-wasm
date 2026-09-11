@@ -1,4 +1,22 @@
 
+# Release [v2.2.0](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.2.0)
+
+### &nbsp;&nbsp;&nbsp;🚀 Features
+
+- Upgrade maxminddb to 0.31, add ISP/Country lookups, fix free()-after-miss &nbsp;-&nbsp; by **Jo** [<samp>(67a3c)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/67a3cd3)
+
+### &nbsp;&nbsp;&nbsp;📚 Documentation
+
+- Remove deno.land badge &nbsp;-&nbsp; by **j1.robofan** [<samp>(26805)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/26805c6)
+- Another fix to the changelog gen &nbsp;-&nbsp; by **j1.robofan** [<samp>(c09bb)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/c09bbf4)
+- Update test badges [skip ci] &nbsp;-&nbsp; by **Jo** [<samp>(17506)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/17506d2)
+
+### &nbsp;&nbsp;&nbsp;🧰 Miscellaneous
+
+- Set up cloud dev environment (AGENTS.md) &nbsp;-&nbsp; by **Jo** and **Cursor Agent** in https://github.com/josh-hemphill/maxminddb-wasm/issues/19 [<samp>(dc67d)</samp>](https://github.com/josh-hemphill/maxminddb-wasm/commit/dc67d0c)
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/josh-hemphill/maxminddb-wasm/compare/v2.1.8...v2.2.0)
+
 # Release [v2.1.8](https://github.com/josh-hemphill/maxminddb-wasm/releases/tag/v2.1.8)
 
 ### &nbsp;&nbsp;&nbsp;📚 Documentation
