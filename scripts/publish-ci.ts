@@ -3,6 +3,11 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import 'zx/globals'
+import {
+	isAlreadyPublishedError,
+	publishedVersionFromNpmView,
+	supportsTrustedPublishing,
+} from './npm-publish-status.ts'
 
 let version = process.argv[2]
 const flags = new Set(process.argv.slice(3))
@@ -68,7 +73,16 @@ async function publishNpm(
 	if (distTag) {
 		npmArgs.push('--tag', distTag)
 	}
-	await $`npm ${npmArgs}`
+	try {
+		await $`npm ${npmArgs}`
+	}
+	catch (error) {
+		if (isAlreadyPublishedError(error)) {
+			console.log(`npm ${name}@${packageVersion} already published, skipping`)
+			return
+		}
+		throw error
+	}
 }
 
 /** Publishes to JSR using OIDC, or JSR_TOKEN when that secret is set. */
@@ -84,11 +98,8 @@ async function publishJsr() {
 /** Returns whether this version is already on the npm registry. */
 async function isNpmVersionPublished(name: string, packageVersion: string) {
 	const result = await $`npm view ${name}@${packageVersion} version`.nothrow()
-	return result.exitCode === 0 && result.stdout.trim() === packageVersion
-}
-
-/** Returns whether this npm CLI version can exchange GitHub Actions OIDC. */
-function supportsTrustedPublishing(npmVersion: string) {
-	const [major = 0, minor = 0, patch = 0] = npmVersion.split('.').map(Number)
-	return major > 11 || (major === 11 && (minor > 5 || (minor === 5 && patch >= 1)))
+	if (result.exitCode !== 0) {
+		return false
+	}
+	return publishedVersionFromNpmView(result.stdout) === packageVersion
 }

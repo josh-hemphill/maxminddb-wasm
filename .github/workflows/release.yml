@@ -34,7 +34,9 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          ref: ${{ inputs.tag || github.ref }}
+          # Use the workflow revision (selected branch on dispatch), not the
+          # release tag. Tag v2.2.0 still points at a commit that always
+          # npm-publishes and cannot skip an already-published version.
       
       - name: Setup and cache dependencies
         uses: ./.github/actions/setup-and-cache
