@@ -9,6 +9,7 @@ ignoreWorkspaceRootCheck: true
 strictPeerDependencies: false
 provenance: true
 shellEmulator: true
+minimumReleaseAge: 0
 allowBuilds:
   bun: true
   deno: true
