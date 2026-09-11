@@ -57,9 +57,16 @@ jobs:
           path: .
 
       - name: Changelog
-        run: pnpm dlx changelogithub --draft
+        continue-on-error: ${{ github.event_name == 'workflow_dispatch' }}
         env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ "$RELEASE_TAG" != v* ]]; then
+            echo "Skipping changelog: '$RELEASE_TAG' is not a version tag"
+            exit 0
+          fi
+          pnpm dlx changelogithub --draft --to "$RELEASE_TAG"
 
       - name: Publish npm
         # Trusted publisher OIDC — do not set NODE_AUTH_TOKEN / NPM_TOKEN.
