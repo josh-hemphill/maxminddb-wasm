@@ -117,4 +117,8 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "📝 docs: update test badges [skip ci]"
-          file_pattern: '*.svg .github/badges/*.json' 
+          file_pattern: '*.svg .github/badges/*.json'
+
+      - name: Test optional talc allocator
+        run: pnpm check:talc
+ 

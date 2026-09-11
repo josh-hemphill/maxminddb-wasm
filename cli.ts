@@ -44,6 +44,7 @@ const cliArgs = minimist(process.argv.slice(2), {
 	string: [
 		'target',
 		'profile',
+		'features',
 	],
 	boolean: [
 		'install-bindgen',
@@ -78,7 +79,8 @@ if (cliArgs['install-bindgen'] && !detectCiEnvs()) {
 const profile = cliArgs.profile || 'release';
 
 if (cliArgs['build-rs']) {
-	await $`cargo build --lib --${profile} --target wasm32-unknown-unknown`;
+	const featureArgs = cliArgs.features ? ['--features', String(cliArgs.features)] : [];
+	await $`cargo build --lib --${profile} --target wasm32-unknown-unknown ${featureArgs}`;
 }
 
 if (cliArgs['build-js']) {

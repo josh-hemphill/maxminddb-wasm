@@ -15,6 +15,7 @@
     "build:node-module": "tsx cli.ts --build-js --target experimental-nodejs-module",
     "test": "tsx cli.ts --fetch-test-artifacts && pnpm run -r \"/^test:.*/\"",
     "test-ci": "tsx cli.ts --fetch-test-artifacts && pnpm run --aggregate-output -r --no-bail --report-summary \"/test:.*/\"",
+    "check:talc": "tsx cli.ts --fetch-test-artifacts --build-rs --features talc && tsx cli.ts --build-js --target experimental-nodejs-module && pnpm --dir tests/node-module test:node-module && pnpm --dir tests/bun test:bun",
     "release": "tsx scripts/release.ts",
     "publish-ci": "tsx scripts/publish-ci.ts",
     "postinstall": "tsx cli.ts --install-bindgen"

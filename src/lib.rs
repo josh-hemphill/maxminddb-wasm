@@ -8,14 +8,9 @@ use std::net::IpAddr;
 use tsify_next::Tsify;
 use wasm_bindgen::prelude::*;
 
-#[cfg(feature = "talc")]
+#[cfg(all(feature = "talc", target_family = "wasm"))]
 #[global_allocator]
-static ALLOCATOR: talc::wasm::WasmArenaTalc = {
-    static mut ARENA: [core::mem::MaybeUninit<u8>; 10_000] =
-        [core::mem::MaybeUninit::uninit(); 10_000];
-    // SAFETY: ARENA is exclusive to this allocator for the process lifetime.
-    unsafe { talc::wasm::new_wasm_arena_allocator(&raw mut ARENA) }
-};
+static ALLOCATOR: talc::wasm::WasmDynamicTalc = talc::wasm::new_wasm_dynamic_allocator();
 
 /// Metadata about the MaxMind database.
 ///
