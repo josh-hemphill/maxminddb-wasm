@@ -1,18 +1,15 @@
-import { defineWorkersConfig } from '@cloudflare/vitest-pool-workers/config';
+import { cloudflareTest } from '@cloudflare/vitest-pool-workers';
+import { defineConfig } from 'vitest/config';
 
-export default defineWorkersConfig({
-	test: {
-		poolOptions: {
-			workers: {
-				wrangler: { configPath: './wrangler.jsonc' },
-				miniflare: {
-					modules: true,
-					wasm: true,
-					dataBlobBindings: {
-						MAXMIND_DB: "../.GeoLite2-City-Test.mmdb",
-					},
+export default defineConfig({
+	plugins: [
+		cloudflareTest({
+			wrangler: { configPath: './wrangler.jsonc' },
+			miniflare: {
+				dataBlobBindings: {
+					MAXMIND_DB: '../.GeoLite2-City-Test.mmdb',
 				},
 			},
-		},
-	},
+		}),
+	],
 });

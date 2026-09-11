@@ -1,25 +1,44 @@
 import { join } from 'jsr:@std/path'
 import { Maxmind } from '../../bundler/index.js'
+import {
+	assertAsnLookup,
+	assertCityLookups,
+	assertCountryLookup,
+	assertFreeAfterMiss,
+} from '../shared/assert-lookups.ts'
 
 const dbFile = await Deno.readFile(join(Deno.cwd(), '..', '.GeoLite2-City-Test.mmdb'))
+const dbFileAsn = await Deno.readFile(join(Deno.cwd(), '..', '.GeoLite2-ASN-Test.mmdb'))
+const dbFileCountry = await Deno.readFile(join(Deno.cwd(), '..', '.GeoLite2-Country-Test.mmdb'))
 
 const maxmind = new Maxmind(dbFile)
+const maxmindAsn = new Maxmind(dbFileAsn)
+const maxmindCountry = new Maxmind(dbFileCountry)
 
-const result = maxmind.lookup_city('2a02:d100::0001')
-
-let tested = false;
 Deno.test({
-	name: 'Random IP Check',
+	name: 'City lookups',
 	fn: () => {
-		tested = true
-		result?.location?.time_zone === "Europe/Warsaw" || (() => { throw Error("Result Missing") });
+		assertCityLookups(maxmind)
 	}
 })
 
 Deno.test({
-	name: 'Check Metadata',
+	name: 'Country lookup',
 	fn: () => {
-		maxmind?.metadata?.languages?.includes('en') || (() => { throw Error("Metadata Missing") });
+		assertCountryLookup(maxmindCountry)
 	}
 })
-if (!Deno.env.get('CI')) console.log(result)
+
+Deno.test({
+	name: 'ASN lookup',
+	fn: () => {
+		assertAsnLookup(maxmindAsn)
+	}
+})
+
+Deno.test({
+	name: 'free after not-found lookup',
+	fn: () => {
+		assertFreeAfterMiss(() => new Maxmind(dbFile))
+	}
+})

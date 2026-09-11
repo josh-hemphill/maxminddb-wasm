@@ -29,8 +29,8 @@ Uses the [Rust MaxmindDB library](https://crates.io/crates/maxminddb) to create 
   - [x] Node.js
   - [x] Deno
   - [x] Bun
-  - [/] Browser (tests are flaky, so not certain)
-  - [?] Cloudflare Workers (have not been able to get them to work locally, you can [see the tests here](https://github.com/josh-hemphill/maxminddb-wasm/blob/main/.github/workflows/test.yml))
+  - [x] Browser
+  - [x] Cloudflare Workers
 
 ## Installation
 
@@ -60,6 +60,15 @@ const dbFile = await readFile('./GeoLite2-City.mmdb');
 const maxmind = new Maxmind(dbFile);
 const result = maxmind.lookup_city('8.8.8.8');
 console.log(result);
+
+// ASN / ISP database (separate .mmdb file from MaxMind)
+const asnDb = await readFile('./GeoLite2-ASN.mmdb');
+const asnReader = new Maxmind(asnDb);
+console.log(asnReader.lookup_isp('8.8.8.8'));
+
+// Country database
+const countryDb = await readFile('./GeoLite2-Country.mmdb');
+console.log(new Maxmind(countryDb).lookup_country('8.8.8.8'));
 ```
 
 ### Deno
@@ -71,14 +80,18 @@ const dbFile = await Deno.readFile('./GeoLite2-City.mmdb');
 const maxmind = new Maxmind(dbFile);
 const result = maxmind.lookup_city('8.8.8.8');
 console.log(result);
+
+const asnDb = await Deno.readFile('./GeoLite2-ASN.mmdb');
+console.log(new Maxmind(asnDb).lookup_isp('8.8.8.8'));
 ```
 
 ### Browser
 
 ```ts
-import { Maxmind } from 'maxminddb-wasm/browser';
+import init, { Maxmind } from 'maxminddb-wasm/browser';
 
-// Fetch the database file
+await init();
+
 const response = await fetch('/GeoLite2-City.mmdb');
 const dbFile = new Uint8Array(await response.arrayBuffer());
 const maxmind = new Maxmind(dbFile);
@@ -88,10 +101,12 @@ const result = maxmind.lookup_city('8.8.8.8');
 ### Cloudflare Workers
 
 ```ts
-import { Maxmind } from 'maxminddb-wasm/browser';
+import init, { Maxmind } from 'maxminddb-wasm/browser';
+import wasmModule from 'maxminddb-wasm/browser/index_bg.wasm';
 
 export default {
   async fetch(request, env) {
+    await init({ module_or_path: wasmModule });
     const maxmind = new Maxmind(new Uint8Array(env.MAXMIND_DB));
     const ip = request.headers.get('cf-connecting-ip');
     const result = maxmind.lookup_city(ip);
@@ -126,11 +141,23 @@ Creates a new Maxmind instance with the provided database file.
 
 ##### `lookup_city(ip: string): CityResponse`
 
-Looks up city information for the given IP address.
+Looks up city information for the given IP address. Also works with **GeoLite2-Country** databases for the overlapping country/continent fields; prefer `lookup_country` when you only need country data.
+
+##### `lookup_country(ip: string): CountryResponse`
+
+Looks up country/continent information for the given IP address. Intended for **GeoLite2-Country** / **GeoIP2-Country** databases (also works with City databases).
 
 ##### `lookup_prefix(ip: string): PrefixResponse`
 
 Looks up network prefix information for the given IP address.
+
+##### `lookup_isp(ip: string): IspResponse`
+
+Looks up ISP and ASN fields for the given IP address. The loaded database must be a compatible product (for example **GeoLite2-ASN** or **GeoIP2-ISP**). City databases do not contain these records.
+
+##### `lookup_isp_prefix(ip: string): IspPrefixResponse`
+
+Same as `lookup_isp`, plus the network prefix length for the matched entry (mirrors `lookup_prefix` for city data).
 
 ##### `metadata: Metadata`
 
@@ -179,6 +206,15 @@ interface CountryRecord {
 }
 ```
 
+#### `CountryResponse`
+
+```ts
+interface CountryResponse {
+    continent?: ContinentRecord;
+    country?: CountryRecord;
+}
+```
+
 #### `SubdivisionRecord`
 
 ```ts
@@ -204,6 +240,36 @@ interface LocationRecord {
 ```ts
 interface PrefixResponse {
     city: CityResponse;
+    prefix_length: number;
+}
+```
+
+#### `IspResponse`
+
+```ts
+interface IspResponse {
+    asn?: AsnResponse;
+    isp?: string;
+    organization?: string;
+    mobile_country_code?: string;
+    mobile_network_code?: string;
+}
+```
+
+#### `AsnResponse`
+
+```ts
+interface AsnResponse {
+    as_num?: number;
+    as_organization?: string;
+}
+```
+
+#### `IspPrefixResponse`
+
+```ts
+interface IspPrefixResponse {
+    isp: IspResponse;
     prefix_length: number;
 }
 ```
@@ -238,4 +304,4 @@ Once you have all the necessary tools installed, you can just run `pnpm build`
 
 ### Testing
 
-Under `tests/*`, there are tests for each platform that can be run with the `pnpm test` command. On first run, it will download the test database from the Maxmind github repo.
+Under `tests/*`, there are tests for each platform that can be run with the `pnpm test` command. On first run, it downloads the City, Country, and ASN MaxMind test databases.

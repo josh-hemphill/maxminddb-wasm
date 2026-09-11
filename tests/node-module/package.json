@@ -10,8 +10,8 @@
 		"maxminddb-wasm": "workspace:*"
 	},
 	"devDependencies": {
-		"tsx": "4.20.6",
+		"tsx": "4.23.13",
 		"typescript": "5.9.3",
-		"vitest": "4.0.14"
+		"vitest": "4.1.11"
 	}
 }

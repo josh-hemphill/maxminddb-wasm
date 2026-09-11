@@ -1,22 +1,32 @@
-import { expect, test } from "bun:test";
+import { test } from "bun:test";
 import { Maxmind } from '../../node-module/index.js'
+import {
+	assertAsnLookup,
+	assertCityLookups,
+	assertCountryLookup,
+	assertFreeAfterMiss,
+} from '../shared/assert-lookups.ts'
 
 const dbFile = await Bun.file('../.GeoLite2-City-Test.mmdb').bytes()
+const dbFileAsn = await Bun.file('../.GeoLite2-ASN-Test.mmdb').bytes()
+const dbFileCountry = await Bun.file('../.GeoLite2-Country-Test.mmdb').bytes()
 
 const maxmind = new Maxmind(dbFile)
+const maxmindAsn = new Maxmind(dbFileAsn)
+const maxmindCountry = new Maxmind(dbFileCountry)
 
-const result = maxmind.lookup_city('2a02:d100::0001')
-
-let tested = false;
-test(
-	'Random IP Check',
-	() => {
-		tested = true
-		result?.location?.time_zone === "Europe/Warsaw" || (() => { throw Error("Result Missing") });
-	}
-)
-
-test('Check Metadata', () => {
-	maxmind?.metadata?.languages?.includes('en') || (() => { throw Error("Metadata Missing") });
+test('City lookups', () => {
+	assertCityLookups(maxmind)
 })
-if (!Bun.env.CI) console.log(result)
+
+test('Country lookup', () => {
+	assertCountryLookup(maxmindCountry)
+})
+
+test('ASN lookup', () => {
+	assertAsnLookup(maxmindAsn)
+})
+
+test('free after not-found lookup', () => {
+	assertFreeAfterMiss(() => new Maxmind(dbFile))
+})

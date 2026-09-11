@@ -1,23 +1,12 @@
 import { join } from 'node:path'
-import { test, describe, expect, it } from 'vitest'
 import { readFile } from 'node:fs/promises'
-
 import { Maxmind } from '../../node-module/index.js'
+import { registerMaxmindTests } from '../shared/maxmind-vitest.ts'
 
-const dbFile = await readFile(join(__dirname, '..', '.GeoLite2-City-Test.mmdb'))
+const testsDir = join(import.meta.dirname, '..')
 
-
-describe('Maxmind DB', () => {
-	const maxmind = new Maxmind(dbFile)
-
-	const result = maxmind.lookup_city('2a02:d100::0001')
-
-	it('should return the correct result', () => {
-		expect(result).toBeDefined()
-		expect(result?.location?.time_zone).toBe("Europe/Warsaw")
-	})
-	it('db should have the correct metadata', () => {
-		expect(maxmind?.metadata?.languages?.includes('en')).toBe(true)
-	})
+registerMaxmindTests(Maxmind, {
+	city: await readFile(join(testsDir, '.GeoLite2-City-Test.mmdb')),
+	asn: await readFile(join(testsDir, '.GeoLite2-ASN-Test.mmdb')),
+	country: await readFile(join(testsDir, '.GeoLite2-Country-Test.mmdb')),
 })
-

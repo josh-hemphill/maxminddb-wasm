@@ -32,7 +32,9 @@ Object.entries(testSummary.executionStatus).map(([name, status]) => {
 	fs.ensureDirSync(path.dirname(statPath));
 	fs.writeFileSync(statPath, JSON.stringify(spec, null, 2));
 	fs.writeFileSync(`.github/badges/test-${spec.label}.svg`, svg);
-	const statusEmoji = spec.message === 'passed' ? '✅' : '❌';
+	const statusEmoji = spec.message === 'pass' ? '✅' :
+		spec.message === 'skip' ? '⏭️' :
+			'❌';
 	comment += `| ${spec.label} | ${statusEmoji} ${spec.message} |\n`;
 });
 if (degraded.length > 0) {

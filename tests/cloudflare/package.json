@@ -3,19 +3,19 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"failing:test:cf-worker": "vitest",
+		"test:cf-worker": "vitest",
 		"cf-typegen": "wrangler types"
 	},
 	"dependencies": {
 		"maxminddb-wasm": "workspace:*"
 	},
 	"devDependencies": {
-		"@cloudflare/vitest-pool-workers": "0.10.11",
-		"@cloudflare/workers-types": "4.20251127.0",
+		"@cloudflare/vitest-pool-workers": "0.22.0",
+		"@cloudflare/workers-types": "5.20260911.1",
 		"typescript": "^5.9.3",
-		"vitest": "~4.0.14"
+		"vitest": "4.1.11"
 	},
 	"optionalDependencies": {
-		"wrangler": "4.51.0"
+		"wrangler": "4.131.0"
 	}
 }

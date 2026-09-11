@@ -3,7 +3,10 @@
 interface Env {
 	MAXMIND_DB: ArrayBuffer;
 }
-declare module "cloudflare:test" {
-	// ...or if you have an existing `Env` type...
-	interface ProvidedEnv extends Env { }
+declare module "cloudflare:workers" {
+	interface ProvidedEnv extends Env {}
+}
+declare module "*.wasm" {
+	const value: WebAssembly.Module;
+	export default value;
 }

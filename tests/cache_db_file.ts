@@ -1,18 +1,24 @@
 import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { existsSync, mkdir } from 'node:fs';
+import { existsSync } from 'node:fs';
 import process from "node:process";
+import { TEST_DATABASE_FILES } from './fixtures.ts';
 
-const __dirname = path.resolve();
-const dbFilePath = path.join(__dirname, 'tests', '.GeoLite2-City-Test.mmdb');
+const workspaceRoot = path.resolve();
 
-if (existsSync(dbFilePath)) {
-	console.log('DB File already exists');
-	process.exit(0);
+for (const database of TEST_DATABASE_FILES) {
+	const dbFilePath = path.join(workspaceRoot, 'tests', `.${database}`);
+
+	if (existsSync(dbFilePath)) {
+		console.log('DB File', database, 'already exists');
+		continue;
+	}
+
+	const dbFile = await fetch(`https://github.com/maxmind/MaxMind-DB/raw/main/test-data/${database}`)
+		.then(v => v.arrayBuffer())
+		.then(v => new Uint8Array(v));
+
+	await writeFile(dbFilePath, dbFile)
 }
 
-const dbFile = await fetch('https://github.com/maxmind/MaxMind-DB/raw/main/test-data/GeoLite2-City-Test.mmdb')
-	.then(v => v.arrayBuffer())
-	.then(v => new Uint8Array(v));
-
-await writeFile(dbFilePath, dbFile)
+process.exit(0);
