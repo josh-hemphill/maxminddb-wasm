@@ -14,9 +14,29 @@ runs:
       shell: bash
       run: rustup toolchain install stable --target wasm32-unknown-unknown
 
+    - name: Resolve wasm-bindgen version
+      id: wasm-bindgen
+      shell: bash
+      run: |
+        version="$(awk '
+          $0 == "name = \"wasm-bindgen\"" {
+            getline
+            if ($1 == "version") {
+              gsub(/"/, "", $3)
+              print $3
+              exit
+            }
+          }
+        ' Cargo.lock)"
+        if [ -z "$version" ]; then
+          echo "Failed to resolve wasm-bindgen version from Cargo.lock" >&2
+          exit 1
+        fi
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+
     - uses: jetli/wasm-bindgen-action@v0.2.0
       with:
-        version: "latest"
+        version: ${{ steps.wasm-bindgen.outputs.version }}
 
     - name: Install pnpm
       uses: pnpm/action-setup@v4

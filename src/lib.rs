@@ -5,20 +5,17 @@ use maxminddb::geoip2;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::net::IpAddr;
-#[cfg(feature = "talc")]
-use talc::*;
 use tsify_next::Tsify;
 use wasm_bindgen::prelude::*;
 
 #[cfg(feature = "talc")]
-static mut ARENA: [u8; 10000] = [0; 10000];
-
-#[cfg(feature = "talc")]
 #[global_allocator]
-static ALLOCATOR: talc::Talck<spin::Mutex<()>, ClaimOnOom> = talc::Talc::new(unsafe {
-    ClaimOnOom::new(Span::from_array(core::ptr::addr_of!(ARENA).cast_mut()))
-})
-.lock();
+static ALLOCATOR: talc::wasm::WasmArenaTalc = {
+    static mut ARENA: [core::mem::MaybeUninit<u8>; 10_000] =
+        [core::mem::MaybeUninit::uninit(); 10_000];
+    // SAFETY: ARENA is exclusive to this allocator for the process lifetime.
+    unsafe { talc::wasm::new_wasm_arena_allocator(&raw mut ARENA) }
+};
 
 /// Metadata about the MaxMind database.
 ///
@@ -210,8 +207,28 @@ pub struct Maxmind {
     db: maxminddb::Reader<Vec<u8>>,
 }
 
+const INVALID_IP_ERROR: &str = "Invalid IP";
+const RESULT_NOT_FOUND_ERROR: &str = "Result Not Found";
+const INVALID_DATABASE_ERROR: &str = "Invalid Database Binary";
+
 fn map_mm_err(err: maxminddb::MaxMindDbError) -> JsError {
     JsError::new(&err.to_string())
+}
+
+fn parse_ip(ip_str: &str) -> Result<IpAddr, JsError> {
+    ip_str.parse().map_err(|_| JsError::new(INVALID_IP_ERROR))
+}
+
+fn decode_or_not_found<'a, T>(
+    lookup: maxminddb::LookupResult<'a, Vec<u8>>,
+) -> Result<T, JsError>
+where
+    T: serde::Deserialize<'a>,
+{
+    lookup
+        .decode::<T>()
+        .map_err(map_mm_err)?
+        .ok_or_else(|| JsError::new(RESULT_NOT_FOUND_ERROR))
 }
 
 fn names_to_btree(names: &geoip2::Names) -> Option<BTreeMap<String, String>> {
@@ -394,11 +411,11 @@ impl Maxmind {
         #[wasm_bindgen(param_description = "The binary database file as a Uint8Array")] js_db: Box<
             [u8],
         >,
-    ) -> Maxmind {
+    ) -> Result<Maxmind, JsError> {
         let local_arr: Vec<u8> = js_db.into_vec();
-        Maxmind {
-            db: maxminddb::Reader::from_source(local_arr).expect_throw("Invalid Database Binary"),
-        }
+        let db = maxminddb::Reader::from_source(local_arr)
+            .map_err(|err| JsError::new(&format!("{INVALID_DATABASE_ERROR}: {err}")))?;
+        Ok(Maxmind { db })
     }
 
     /// Looks up city-level geolocation data for an IP address.
@@ -414,12 +431,8 @@ impl Maxmind {
         &self,
         #[wasm_bindgen(param_description = "IPv4 or IPv6 address to look up")] ip_str: &str,
     ) -> Result<CityResponse, JsError> {
-        let ip_addr: IpAddr = ip_str.parse().map_err(|_| JsError::new("Invalid IP"))?;
-        let lr = self.db.lookup(ip_addr).map_err(map_mm_err)?;
-        let city = lr
-            .decode::<geoip2::City>()
-            .map_err(map_mm_err)?
-            .ok_or_else(|| JsError::new("Result Not Found"))?;
+        let lookup = self.db.lookup(parse_ip(ip_str)?).map_err(map_mm_err)?;
+        let city = decode_or_not_found::<geoip2::City>(lookup)?;
         Ok(convert_city_response(&city))
     }
 
@@ -436,12 +449,8 @@ impl Maxmind {
         &self,
         #[wasm_bindgen(param_description = "IPv4 or IPv6 address to look up")] ip_str: &str,
     ) -> Result<CountryResponse, JsError> {
-        let ip_addr: IpAddr = ip_str.parse().map_err(|_| JsError::new("Invalid IP"))?;
-        let lr = self.db.lookup(ip_addr).map_err(map_mm_err)?;
-        let country = lr
-            .decode::<geoip2::Country>()
-            .map_err(map_mm_err)?
-            .ok_or_else(|| JsError::new("Result Not Found"))?;
+        let lookup = self.db.lookup(parse_ip(ip_str)?).map_err(map_mm_err)?;
+        let country = decode_or_not_found::<geoip2::Country>(lookup)?;
         Ok(convert_country_response(&country))
     }
 
@@ -458,13 +467,8 @@ impl Maxmind {
         &self,
         #[wasm_bindgen(param_description = "IPv4 or IPv6 address to look up")] ip_str: &str,
     ) -> Result<IspResponse, JsError> {
-        let ip_addr: IpAddr = ip_str.parse().map_err(|_| JsError::new("Invalid IP"))?;
-        let lr = self.db.lookup(ip_addr).map_err(map_mm_err)?;
-        let isp = lr
-            .decode::<geoip2::Isp>()
-            .map_err(map_mm_err)?
-            .ok_or_else(|| JsError::new("Result Not Found"))?;
-        Ok(convert_isp_response(isp))
+        let lookup = self.db.lookup(parse_ip(ip_str)?).map_err(map_mm_err)?;
+        Ok(convert_isp_response(decode_or_not_found(lookup)?))
     }
 
     /// Looks up city-level geolocation data and prefix length for an IP address.
@@ -480,13 +484,9 @@ impl Maxmind {
         &self,
         #[wasm_bindgen(param_description = "IPv4 or IPv6 address to look up")] ip_str: &str,
     ) -> Result<PrefixResponse, JsError> {
-        let ip_addr: IpAddr = ip_str.parse().map_err(|_| JsError::new("Invalid IP"))?;
-        let lr = self.db.lookup(ip_addr).map_err(map_mm_err)?;
-        let prefix_length = prefix_len(lr.network().map_err(map_mm_err)?);
-        let city = lr
-            .decode::<geoip2::City>()
-            .map_err(map_mm_err)?
-            .ok_or_else(|| JsError::new("Result Not Found"))?;
+        let lookup = self.db.lookup(parse_ip(ip_str)?).map_err(map_mm_err)?;
+        let prefix_length = prefix_len(lookup.network().map_err(map_mm_err)?);
+        let city = decode_or_not_found::<geoip2::City>(lookup)?;
         Ok(PrefixResponse {
             city: convert_city_response(&city),
             prefix_length,
@@ -506,15 +506,10 @@ impl Maxmind {
         &self,
         #[wasm_bindgen(param_description = "IPv4 or IPv6 address to look up")] ip_str: &str,
     ) -> Result<IspPrefixResponse, JsError> {
-        let ip_addr: IpAddr = ip_str.parse().map_err(|_| JsError::new("Invalid IP"))?;
-        let lr = self.db.lookup(ip_addr).map_err(map_mm_err)?;
-        let prefix_length = prefix_len(lr.network().map_err(map_mm_err)?);
-        let isp = lr
-            .decode::<geoip2::Isp>()
-            .map_err(map_mm_err)?
-            .ok_or_else(|| JsError::new("Result Not Found"))?;
+        let lookup = self.db.lookup(parse_ip(ip_str)?).map_err(map_mm_err)?;
+        let prefix_length = prefix_len(lookup.network().map_err(map_mm_err)?);
         Ok(IspPrefixResponse {
-            isp: convert_isp_response(isp),
+            isp: convert_isp_response(decode_or_not_found(lookup)?),
             prefix_length,
         })
     }
