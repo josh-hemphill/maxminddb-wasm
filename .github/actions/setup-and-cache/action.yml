@@ -39,12 +39,13 @@ runs:
         version: ${{ steps.wasm-bindgen.outputs.version }}
 
     - name: Install pnpm
-      uses: pnpm/action-setup@v4
+      uses: pnpm/setup@v2
       with:
-        version: 10
+        install: false
+        cache: true
 
     - name: Set node version to ${{ inputs.node-version }}
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ inputs.node-version }}
 
@@ -73,7 +74,7 @@ runs:
       run: echo "Failed to resolve package versions. See log above." && exit 1
 
     - name: Cache Playwright v${{ steps.resolve-package-versions.outputs.PLAYWRIGHT_VERSION }}
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       id: playwright-cache
       with:
         path: ${{ env.PLAYWRIGHT_BROWSERS_PATH || format('{0}/.cache/ms-playwright', github.workspace) }}

@@ -26,6 +26,7 @@
     "url": "https://github.com/josh-hemphill/maxminddb-wasm.git"
   },
   "type": "module",
+  "packageManager": "pnpm@12.3.4",
   "contributors": [
     {
       "name": "JoshuaHemphill",
