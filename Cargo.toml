@@ -17,6 +17,10 @@ crate-type = ["cdylib", "rlib"]
 
 [features]
 default = ["console_error_panic_hook"]
+# maxminddb 0.31: SIMD UTF-8 validation. Mutually exclusive with unsafe-str-decode.
+simdutf8 = ["maxminddb/simdutf8"]
+# maxminddb 0.31: skip UTF-8 validation on trusted DBs. Mutually exclusive with simdutf8.
+unsafe-str-decode = ["maxminddb/unsafe-str-decode"]
 
 [dependencies]
 # Optional maxminddb features `simdutf8` / `unsafe-str-decode` can speed string decode; measure `.wasm` size before enabling.
